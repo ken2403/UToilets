@@ -1,6 +1,7 @@
 # flutter_app
 
 A new Flutter project.
+西尾健人
 
 ## Getting Started
 

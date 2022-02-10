@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search available toilet',
-      // theme: ThemeData(primarySwatch: Colors.lightGreen),
       theme: ThemeData(
+        // 色はとりあえず好きだから緑＋青で作ってみた、この先の過程でまた変更しても良い
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.lightGreen,
         ).copyWith(

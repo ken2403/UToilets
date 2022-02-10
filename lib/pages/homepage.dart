@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   // TODO:search画面(作ったらこのコメント消して)
   // TODO:map画面
+  // 画面を構成するwidgetは別ファイルで作成してここで使うイメージ
   final List<Widget> _bodyWidgets = [
     // searchの画面に対応
     const Center(

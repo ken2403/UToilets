@@ -7,10 +7,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapWidget extends StatefulWidget {
   /*
-    トイレのデータのjsonファイルから、条件を満たすトイレのみをマップ上に表示するWidget
+    トイレのデータのjsonファイル(assets/data/toilet.json)から、
+    条件を満たすトイレのみをマップ上に表示するWidget
+    今のところはウォシュレットの有無と製造年月日のみでフィルター可能(情報追加してくれてOK)
   */
   // 検索時のフィルター用のコンストラクター
-  // TODO:今の実装ではウォシュレットの有無と製造年月日でのみフィルター可能、今後変更
   const MapWidget(
       {Key? key, required this.washletAvailable, required this.madeDate})
       : _any = false,
@@ -44,6 +45,8 @@ class _MapMarkersState extends State<MapWidget> {
         Marker(
           markerId: MarkerId(toiletDataElement['location']),
           position: LatLng(toiletDataElement['lat'], toiletDataElement['lng']),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           infoWindow: InfoWindow(
             title: toiletDataElement['locationJa'],
             snippet:
@@ -51,7 +54,7 @@ class _MapMarkersState extends State<MapWidget> {
             // TODO: tap InfoWindow
             onTap: () => print('tap info window'),
           ),
-          // TODO: tap anchor Window
+          // TODO: tap anchor
           onTap: () => print('tap anchor'),
         ),
       );

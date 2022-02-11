@@ -26,7 +26,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   // TODO:search画面(作ったらこのコメント消して)
-  // 画面を構成するwidgetは別ファイルで作成してここで使うイメージ
+  // searchで条件フィルターしてmap上に条件のデータを表示する際には./widgets/map_widget.dart を使うとフィルターできるようにしてある(詳細はそっち確認)
+  // dataの形式については assets/data/toilet.jsonを確認して(とりあえず作っただけだから今後変更可能)
   final List<Widget> _bodyWidgets = [
     // searchの画面に対応
     const Center(

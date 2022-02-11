@@ -3,17 +3,17 @@
     [
         {
             "location":"eng_4_1f",
-            "locationJa":"ダミー工学部4号館1F",
+            "locationJa":"ダミー工4-1Fウォシュレットなし",
             "floor":1,
             "lat":35.71481458183423,
             "lng":139.76146705897145,
             "metadata":
             {
-                "maleSmall":3,
+                "maleSmall":5,
                 "maleBig":2,
                 "femaleBig":3,
                 "multipurpose":true,
-                "washlet": true,
+                "washlet": false,
                 "madeDate": 2017,
                 "recyclePaper":false,
                 "singlePaper":true,

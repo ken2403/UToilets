@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import './map_page.dart';
+import './home_drawer.dart';
 
 class HomePage extends StatefulWidget {
   /*
     アプリ起動時の最初のページ
-
     bottomNavigationBarで画面切り替え
-
-    画面作ったら _bodyWidgets に加える
+    検索用の画面を作ったら List<Widget> _bodyWidgets に加える
   */
   const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -43,12 +42,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Drawer(
+        child: HomeDrawer(),
+      ),
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          // TODO:onPressed
-          onPressed: () {},
-        ),
         title: Text(
           widget.title,
           style: Theme.of(context).textTheme.headline6,

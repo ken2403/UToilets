@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-/*
-  アプリ起動時の最初のページ
-
-  bottomNavigationBarで画面切り替え
-
-  画面作ったら _bodyWidgets に加える
-*/
+import './map_page.dart';
 
 class HomePage extends StatefulWidget {
+  /*
+    アプリ起動時の最初のページ
+
+    bottomNavigationBarで画面切り替え
+
+    画面作ったら _bodyWidgets に加える
+  */
   const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
@@ -26,7 +27,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   // TODO:search画面(作ったらこのコメント消して)
-  // TODO:map画面
   // 画面を構成するwidgetは別ファイルで作成してここで使うイメージ
   final List<Widget> _bodyWidgets = [
     // searchの画面に対応
@@ -37,12 +37,7 @@ class _HomePageState extends State<HomePage> {
       ),
     ),
     // mapの画面に対応
-    const Center(
-      child: Text(
-        'map screen',
-        style: TextStyle(fontSize: 40),
-      ),
-    ),
+    const MapPage()
   ];
 
   @override

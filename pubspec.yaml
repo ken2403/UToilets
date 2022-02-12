@@ -37,6 +37,9 @@ dependencies:
   # Google map package for flutter
   google_maps_flutter: ^2.1.1
 
+  # current location
+  location: ^4.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

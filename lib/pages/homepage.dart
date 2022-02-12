@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         ],
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         selectedFontSize: 15,
       ),
     );

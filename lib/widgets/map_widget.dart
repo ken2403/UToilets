@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,22 +10,41 @@ class MapWidget extends StatefulWidget {
   /*
     トイレのデータのjsonファイル(assets/data/toilet.json)から、
     条件を満たすトイレのみをマップ上に表示するWidget
+    LocationDataとmapControllerを渡して初期化するようになってるのは、それ以外に方法が思いつかなかったからなので、どうしたらいいか(アプリのデザインも含めて)一緒に考えて欲しい
     今のところはウォシュレットの有無と製造年月日のみでフィルター可能(情報追加してくれてOK)
+
+    Attributes
+    ----------
+    location : LocationData
+      LocationData than has attributes of 'double latitude' and 'doublt longtitude'.
+    mapController : Completer<GoogleMapController>
+      Controller for a single GoogleMap
+    washletAvailable : bool
+      filter of washlet availability.
+    madeYear : int
+      filter of made year.
   */
   // 検索時のフィルター用のコンストラクター
   const MapWidget(
-      {Key? key, required this.washletAvailable, required this.madeDate})
+      {Key? key,
+      required this.location,
+      required this.mapController,
+      required this.washletAvailable,
+      required this.madeYear})
       : _any = false,
         super(key: key);
   // 全部のリストを表示する用のコンストラクター
-  const MapWidget.any({Key? key})
+  const MapWidget.any(
+      {Key? key, required this.location, required this.mapController})
       : washletAvailable = false,
-        madeDate = 2020,
+        madeYear = 2020,
         _any = true,
         super(key: key);
 
+  final LocationData location;
+  final Completer<GoogleMapController> mapController;
   final bool washletAvailable;
-  final int madeDate;
+  final int madeYear;
   final bool _any;
 
   @override
@@ -32,11 +52,6 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapMarkersState extends State<MapWidget> {
-  static const CameraPosition _initialCenterPosition = CameraPosition(
-    target: LatLng(35.71292139692912, 139.7620104550409),
-    zoom: 16.4746,
-  );
-  final Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> _markers = {};
 
   void _addMarker(Map toiletDataElement, Set markersSet) {
@@ -61,7 +76,7 @@ class _MapMarkersState extends State<MapWidget> {
     });
   }
 
-  // データのjsonファイルから条件のトイレのみを抽出する関数
+  // function to extract the toilets that match the conditions from .json
   Future getMarkers(Set<Marker> markers) async {
     String loadData = await rootBundle.loadString('assets/data/toilet.json');
     final jsonResponse = json.decode(loadData);
@@ -74,11 +89,11 @@ class _MapMarkersState extends State<MapWidget> {
     }
     for (var element in toiletData) {
       if (widget.washletAvailable && element['metadata']['washlet']) {
-        if (widget.madeDate <= element['metadata']['madeDate']) {
+        if (widget.madeYear <= element['metadata']['madeYear']) {
           _addMarker(element, markers);
         }
       } else if (!(widget.washletAvailable)) {
-        if (widget.madeDate <= element['metadata']['madeDate']) {
+        if (widget.madeYear <= element['metadata']['madeYear']) {
           _addMarker(element, markers);
         }
       }
@@ -90,15 +105,16 @@ class _MapMarkersState extends State<MapWidget> {
     getMarkers(_markers);
     return GoogleMap(
       mapType: MapType.normal,
-      initialCameraPosition: _initialCenterPosition,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(widget.location.latitude!, widget.location.longitude!),
+        zoom: 16.5,
+      ),
       onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
+        widget.mapController.complete(controller);
       },
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
       markers: _markers,
     );
   }
-  // Future<void> _goToTheLake() async {
-  //   final GoogleMapController controller = await _controller.future;
-  //   controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  // }
 }

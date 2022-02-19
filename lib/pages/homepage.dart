@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/search_page.dart';
 
 import './map_page.dart';
 import './home_drawer.dart';
+import './search_page.dart';
 
 class HomePage extends StatefulWidget {
   /*
@@ -25,17 +27,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // TODO:search画面(作ったらこのコメント消して)
   // searchで条件フィルターしてmap上に条件のデータを表示する際には./widgets/map_widget.dart を使うとフィルターできるようにしてある(詳細はそっち確認)
   // dataの形式については assets/data/toilet.jsonを確認して(とりあえず作っただけだから今後変更可能)
   final List<Widget> _bodyWidgets = [
     // searchの画面に対応
-    const Center(
-      child: Text(
-        'search screen',
-        style: TextStyle(fontSize: 40),
-      ),
-    ),
+    const SearchPage(),
     // mapの画面に対応
     const MapPage()
   ];

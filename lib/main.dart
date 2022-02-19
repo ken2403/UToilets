@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
-
+import './pages/map_page.dart';
+import './pages/search_page.dart';
 import './pages/homepage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'washlet': false,
+  };
+
+  void _setFilters(Map<String, bool> filterData) {
+
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -31,6 +44,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (ctx) => const HomePage(title: 'トイレを探す'),
+        MapPage.routeName: (ctx) => MapPage(),
+        SearchPage.routeName: (ctx) => SearchPage(),
       },
     );
   }

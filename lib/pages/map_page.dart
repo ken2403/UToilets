@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import '../widgets/map_widget.dart';
 
 class MapPage extends StatefulWidget {
+  static const routeName = '/mappage';
   /*
     デフォルトでは、全てのトイレのリストをマップ上に表示
   */
@@ -69,19 +70,51 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isfiltered = false;
+    final routeArgs =
+        ModalRoute.of(context)!.settings.arguments as Map<String, Object>;
+    final washlet = routeArgs['washlet'];
+    final madeyear = routeArgs['madeyear'];
+    isfiltered = routeArgs['isfiltered'] as bool;
+    // final routeArgs = ModalRoute.of(context);
+
+
+    //debug
+    print('washlet');
+    print(washlet);
+    print('madeyear');
+    print(madeyear);
+    //debug
     return Scaffold(
-      body: _currentLocation == null
-          ? MapWidget.any(
-              location: LocationData.fromMap({
-                'latitude': 35.712805509828605,
-                'longitude': 139.762034567044,
-              }),
-              mapController: _controller,
-            )
-          : MapWidget.any(
-              location: _currentLocation!,
-              mapController: _controller,
-            ),
+      body: !isfiltered
+          ? _currentLocation == null
+              ? MapWidget.any(
+                  location: LocationData.fromMap({
+                    'latitude': 35.712805509828605,
+                    'longitude': 139.762034567044,
+                  }),
+                  mapController: _controller,
+                )
+              : MapWidget.any(
+                  location: _currentLocation!,
+                  mapController: _controller,
+                )
+          : _currentLocation == null
+              ? MapWidget(
+                  location: LocationData.fromMap({
+                    'latitude': 35.712805509828605,
+                    'longitude': 139.762034567044,
+                  }),
+                  mapController: _controller,
+                  washletAvailable: washlet as bool,
+                  madeYear: madeyear as int,
+                )
+              : MapWidget(
+                  location: _currentLocation!,
+                  mapController: _controller,
+                  washletAvailable: washlet as bool,
+                  madeYear: madeyear as int,
+                ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goNOW,
         label: const Text(

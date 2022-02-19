@@ -70,22 +70,16 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    // search_pageからの引数をこっちの変数に代入している。
     bool isfiltered = false;
     final routeArgs =
         ModalRoute.of(context)!.settings.arguments as Map<String, Object>;
     final washlet = routeArgs['washlet'];
     final madeyear = routeArgs['madeyear'];
     isfiltered = routeArgs['isfiltered'] as bool;
-    // final routeArgs = ModalRoute.of(context);
 
-
-    //debug
-    print('washlet');
-    print(washlet);
-    print('madeyear');
-    print(madeyear);
-    //debug
     return Scaffold(
+      // isfilteredがtrueだとMapWidgetを呼び出し、falseだとMapWidget.anyを呼び出している。冗長。後で修正。
       body: !isfiltered
           ? _currentLocation == null
               ? MapWidget.any(

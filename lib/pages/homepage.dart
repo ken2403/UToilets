@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/search_page.dart';
+import './search_page.dart';
 
 import './map_page.dart';
 import './home_drawer.dart';
-import './search_page.dart';
 
 class HomePage extends StatefulWidget {
   /*
@@ -11,7 +10,7 @@ class HomePage extends StatefulWidget {
     bottomNavigationBarで画面切り替え
     検索用の画面を作ったら List<Widget> _bodyWidgets に加える
   */
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -33,15 +32,23 @@ class _HomePageState extends State<HomePage> {
     // searchの画面に対応
     const SearchPage(),
     // mapの画面に対応
-    const MapPage()
+    MapPage(
+      filters: {
+        'multipurpose': false,
+        'washlet': false,
+        'madeyear': 1900,
+        'recyclePaper': false,
+        'singlePaper': false,
+        'seatWarmer': false,
+        'isfiltered': false,
+      },
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(
-        child: HomeDrawer(),
-      ),
+      drawer: HomeDrawer(),
       appBar: AppBar(
         title: Text(
           widget.title,

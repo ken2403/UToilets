@@ -25,26 +25,29 @@ class MapWidget extends StatefulWidget {
       filter of made year.
   */
   // 検索時のフィルター用のコンストラクター
-  const MapWidget(
+  MapWidget(
       {Key? key,
       required this.location,
       required this.mapController,
-      required this.washletAvailable,
-      required this.madeYear})
+      required this.filters})
       : _any = false,
         super(key: key);
   // 全部のリストを表示する用のコンストラクター
-  const MapWidget.any(
+  MapWidget.any(
       {Key? key, required this.location, required this.mapController})
-      : washletAvailable = false,
-        madeYear = 2020,
-        _any = true,
+      : filters = {'multipurpose': false,
+        'washlet': false,
+        'madeyear': 1900,
+        'recyclePaper': false,
+        'singlePaper': false,
+        'seatWarmer': false,
+        'isfiltered': false,},
+      _any = true,
         super(key: key);
 
   final LocationData location;
   final Completer<GoogleMapController> mapController;
-  final bool washletAvailable;
-  final int madeYear;
+  Map<String, Object> filters;
   final bool _any;
 
   @override
@@ -81,6 +84,14 @@ class _MapMarkersState extends State<MapWidget> {
     String loadData = await rootBundle.loadString('assets/data/toilet.json');
     final jsonResponse = json.decode(loadData);
     final List toiletData = jsonResponse['toiletData'];
+    //debug
+    // print('debug');
+    // print(widget.filters['multipurpose']);
+    // print(widget.filters['washlet']);
+    // print(widget.filters['madeyear']);
+    // print(widget.filters['recyclePaper']);
+    // print(widget.filters['singlePaper']);
+    // print(widget.filters['seatWarmer']);
 
     if (widget._any) {
       for (var element in toiletData) {
@@ -88,15 +99,25 @@ class _MapMarkersState extends State<MapWidget> {
       }
     }
     for (var element in toiletData) {
-      if (widget.washletAvailable && element['metadata']['washlet']) {
-        if (widget.madeYear <= element['metadata']['madeYear']) {
-          _addMarker(element, markers);
-        }
-      } else if (!(widget.washletAvailable)) {
-        if (widget.madeYear <= element['metadata']['madeYear']) {
-          _addMarker(element, markers);
-        }
+      if (widget.filters['multipurpose'] as bool && !element['metadata']['multipurpose']) {
+        continue;
       }
+      if (widget.filters['washlet'] as bool && !element['metadata']['washlet']) {
+        continue;
+      }
+      if (widget.filters['madeyear'] as int >= element['metadata']['madeYear']) {
+        continue;
+      }
+      if (widget.filters['recyclePaper'] as bool && !element['metadata']['recyclePaper']) {
+        continue;
+      }
+      if (widget.filters['singlePaper'] as bool && !element['metadata']['singlePaper']) {
+        continue;
+      }
+      if (widget.filters['seatWarmer'] as bool && !element['metadata']['seatWarmer']) {
+        continue;
+      }
+      _addMarker(element, markers);
     }
   }
 

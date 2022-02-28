@@ -1,3 +1,5 @@
+// 機能していません。
+
 import 'package:flutter/material.dart';
 import './map_page.dart';
 

@@ -1,69 +1,68 @@
 import 'package:flutter/material.dart';
+import 'pages/filters_page.dart';
+import './pages/map_page.dart';
+import './pages/search_page.dart';
+import './pages/homepage.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // global変数(下の_filters)をこのmain.dartファイルで管理している。
+  // filter_pageでウォシュレットとかが選択されて保存が押されたらfilter_pageのwashlet変数だけでなくこのgloabal変数も変更するようにしている。
+  // この変更されたglobal変数を下のrouteからmap_pageへ送ることでフィルタリングされたトイレのみmap_page→map_widgetで表示されるようになっている。
+  Map<String, Object> _filters = {
+    'multipurpose': false,
+    'washlet': false,
+    'madeyear': 1900,
+    'recyclePaper': false,
+    'singlePaper': false,
+    'seatWarmer': false,
+    'isfiltered': false,
+  };
+
+  void _setFilters (Map<String, Object> filterData) {
+    setState(() {
+      _filters = filterData;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Search available toilet',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'トイレを探す'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const Text('今すぐ'),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                ),
-              ],
+        primarySwatch: Colors.lightBlue,
+        accentColor: Colors.lightGreen,
+        canvasColor: Color.fromRGBO(255, 254, 249, 1),
+        // フォント追加してみた。別にいらないかも
+        fontFamily: 'ARIAL',
+        textTheme: ThemeData.light().textTheme.copyWith(
+            headline6: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const Text('フィルター'),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                ),
-              ],
-            )
-          ],
-        ),
+            bodyText1: TextStyle(
+              fontSize: 18,
+            )),
       ),
+      initialRoute: '/',
+      routes: {
+        // searchpage、mappageへのrouteを追加。
+        '/': (ctx) => HomePage(title: 'トイレを探す'),
+        MapPage.routeName: (ctx) => MapPage(filters: _filters),
+        SearchPage.routeName: (ctx) => SearchPage(),
+        // global変数(main.dart内の_filtersとそれを更新する関数をfilter_pageに引数として渡している。)
+        FilterPage.routeName: (ctx) => FilterPage(currentFilters: _filters, saveFilters: _setFilters),
+      },
     );
   }
 }

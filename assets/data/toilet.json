@@ -1,0 +1,65 @@
+{
+    "toiletData":
+    [
+        {
+            "location":"eng_4_1f",
+            "locationJa":"ダミー工4-1Fウォシュレットなし",
+            "floor":1,
+            "lat":35.71481458183423,
+            "lng":139.76146705897145,
+            "metadata":
+            {
+                "maleSmall":5,
+                "maleBig":2,
+                "femaleBig":3,
+                "multipurpose":true,
+                "washlet": false,
+                "madeYear": 2017,
+                "recyclePaper":false,
+                "singlePaper":true,
+                "seatWarmer":true,
+                "image":null
+            }
+        },
+        {
+            "location":"eng_4_2f",
+            "locationJa":"ダミー工学部4号館2F",
+            "floor":2,
+            "lat":35.71488693472433,
+            "lng":139.76190257347977,
+            "metadata":
+            {
+                "maleSmall":3,
+                "maleBig":2,
+                "femaleBig":3,
+                "multipurpose":true,
+                "washlet": true,
+                "madeYear": 2017,
+                "recyclePaper":false,
+                "singlePaper":true,
+                "seatWarmer":true,
+                "image":null
+            }
+        },
+        {
+            "location":"temp_current_location",
+            "locationJa":"仮の現在地",
+            "floor":1,
+            "lat":35.71064693472433,
+            "lng":139.76090257347977,
+            "metadata":
+            {
+                "maleSmall":3,
+                "maleBig":2,
+                "femaleBig":3,
+                "multipurpose":true,
+                "washlet": true,
+                "madeYear": 2010,
+                "recyclePaper":false,
+                "singlePaper":true,
+                "seatWarmer":true,
+                "image":null
+            }
+        }
+    ]
+}

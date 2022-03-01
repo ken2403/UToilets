@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home_drawer.dart';
+import '../Icon/multipurpose_toilet.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage(
@@ -24,6 +25,7 @@ class _FilterPageState extends State<FilterPage> {
   bool singlePaper = false;
   bool seatWarmer = false;
 
+  // 
   @override
   void initState() {
     multipurpose = widget.currentFilters['multipurpose'] as bool;
@@ -115,6 +117,7 @@ class _FilterPageState extends State<FilterPage> {
                     });
                   }),
                   SwitchListTile(
+                  secondary: Icon(multipurpose_toilet.wheelchair),
                   title: Text('多目的トイレ'),
                   subtitle: Text('多目的トイレがある場所のみ表示'),
                   value: multipurpose,

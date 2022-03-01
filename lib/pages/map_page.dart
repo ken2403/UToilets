@@ -37,7 +37,10 @@ class MapPageState extends State<MapPage> {
   void _getLocation() async {
     _currentLocation = await _locationService.getLocation();
   }
-
+  
+  // widget.filtersはmain.dartから引数として送られてきたフィルター変数情報
+  // それをfilter_page内の変数filtersに代入して、それをmap_widgetに送ることでフィルタリングされたトイレのみ表示するようにしている。
+  // 関数名どっちもfilterでわかりずらくてすみません。
   @override
   void initState() {
     filters['multipurpose'] = widget.filters['multipurpose'] as bool;

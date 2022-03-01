@@ -93,6 +93,7 @@ class _MapMarkersState extends State<MapWidget> {
     // print(widget.filters['singlePaper']);
     // print(widget.filters['seatWarmer']);
 
+    // filterのある変数(multipurposeなど)がtureになっていて、かつその変数がfalseのトイレのみスルーしてそうでないトイレは含めるというアルゴリズムに変更した。
     if (widget._any) {
       for (var element in toiletData) {
         _addMarker(element, markers);

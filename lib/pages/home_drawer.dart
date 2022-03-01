@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './fliters_page.dart';
+import 'filters_page.dart';
 import './map_page.dart';
 
 // TODO:drawer作る

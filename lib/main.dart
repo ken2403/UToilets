@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './pages/fliters_page.dart';
+import 'pages/filters_page.dart';
 import './pages/map_page.dart';
 import './pages/search_page.dart';
 import './pages/homepage.dart';
@@ -16,6 +16,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // global変数(下の_filters)をこのmain.dartファイルで管理している。
+  // filter_pageでウォシュレットとかが選択されて保存が押されたらfilter_pageのwashlet変数だけでなくこのgloabal変数も変更するようにしている。
+  // この変更されたglobal変数を下のrouteからmap_pageへ送ることでフィルタリングされたトイレのみmap_page→map_widgetで表示されるようになっている。
   Map<String, Object> _filters = {
     'multipurpose': false,
     'washlet': false,
@@ -57,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         '/': (ctx) => HomePage(title: 'トイレを探す'),
         MapPage.routeName: (ctx) => MapPage(filters: _filters),
         SearchPage.routeName: (ctx) => SearchPage(),
+        // global変数(main.dart内の_filtersとそれを更新する関数をfilter_pageに引数として渡している。)
         FilterPage.routeName: (ctx) => FilterPage(currentFilters: _filters, saveFilters: _setFilters),
       },
     );

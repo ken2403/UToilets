@@ -3,14 +3,17 @@ import 'package:flutter_app/pages/home_drawer.dart';
 import '../Icon/multipurpose_toilet.dart';
 
 class FilterPage extends StatefulWidget {
+  /*
+    TODO:ページの説明
+  */
+  // routing
+  static const routeName = '/filters';
+  // constructor
   const FilterPage(
       {Key? key, required this.currentFilters, required this.saveFilters})
       : super(key: key);
-
-  static const routeName = '/filters';
-
-  final Function saveFilters;
   final Map<String, Object> currentFilters;
+  final void Function(Map<String, Object>)? saveFilters;
 
   @override
   State<FilterPage> createState() => _FilterPageState();
@@ -25,7 +28,7 @@ class _FilterPageState extends State<FilterPage> {
   bool singlePaper = false;
   bool seatWarmer = false;
 
-  // 
+  //
   @override
   void initState() {
     multipurpose = widget.currentFilters['multipurpose'] as bool;
@@ -39,36 +42,36 @@ class _FilterPageState extends State<FilterPage> {
 
   Widget _buildDropdownButton(int madeyear, void Function(int?) update) {
     return ListTile(
-        title: Text(
-          '製造年',
-        ),
-        subtitle: Text('設定年以降に作られた場所のみ表示'),
-        trailing: DropdownButton(
-          value: madeyear,
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          onChanged: update,
-          items: <int>[
-            1900,
-            1910,
-            1920,
-            1930,
-            1940,
-            1950,
-            1960,
-            1970,
-            1980,
-            1990,
-            2000,
-            2010,
-            2020
-          ].map<DropdownMenuItem<int>>((int value) {
-            return DropdownMenuItem<int>(
-              value: value,
-              child: Text(value.toString()),
-            );
-          }).toList(),
-        ),
+      title: Text(
+        '製造年',
+      ),
+      subtitle: Text('設定年以降に作られた場所のみ表示'),
+      trailing: DropdownButton(
+        value: madeyear,
+        icon: const Icon(Icons.arrow_downward),
+        elevation: 16,
+        onChanged: update,
+        items: <int>[
+          1900,
+          1910,
+          1920,
+          1930,
+          1940,
+          1950,
+          1960,
+          1970,
+          1980,
+          1990,
+          2000,
+          2010,
+          2020
+        ].map<DropdownMenuItem<int>>((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Text(value.toString()),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -76,7 +79,7 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('厳選する'),
+        title: Text('検索条件の設定'),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -89,16 +92,20 @@ class _FilterPageState extends State<FilterPage> {
                 'seatWarmer': seatWarmer,
                 'isfiltered': isfiltered,
               };
-              widget.saveFilters(selectedFilters);
+              widget.saveFilters!(selectedFilters);
             },
             style: TextButton.styleFrom(
               primary: Colors.red,
             ),
-            child: Text('保存', style: TextStyle(color: Colors.white,),),
+            child: Text(
+              '保存',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           )
         ],
       ),
-      drawer: HomeDrawer(),
       body: Column(children: <Widget>[
         Container(
           child: Text('選択してください'),
@@ -116,7 +123,7 @@ class _FilterPageState extends State<FilterPage> {
                       isfiltered = true;
                     });
                   }),
-                  SwitchListTile(
+              SwitchListTile(
                   secondary: Icon(multipurpose_toilet.wheelchair),
                   title: Text('多目的トイレ'),
                   subtitle: Text('多目的トイレがある場所のみ表示'),
@@ -127,7 +134,7 @@ class _FilterPageState extends State<FilterPage> {
                       isfiltered = true;
                     });
                   }),
-                  SwitchListTile(
+              SwitchListTile(
                   title: Text('再生紙'),
                   subtitle: Text('再生紙がある場所のみ表示'),
                   value: recyclePaper,
@@ -137,7 +144,7 @@ class _FilterPageState extends State<FilterPage> {
                       isfiltered = true;
                     });
                   }),
-                  SwitchListTile(
+              SwitchListTile(
                   title: Text('singlePaper'),
                   subtitle: Text('singlePaperがある場所のみ表示'),
                   value: singlePaper,
@@ -147,7 +154,7 @@ class _FilterPageState extends State<FilterPage> {
                       isfiltered = true;
                     });
                   }),
-                  SwitchListTile(
+              SwitchListTile(
                   title: Text('温かい便座'),
                   subtitle: Text('温かい便座がある場所のみ表示'),
                   value: seatWarmer,

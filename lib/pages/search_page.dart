@@ -1,11 +1,18 @@
-// 機能していません。
+// 機能していません．
 
 import 'package:flutter/material.dart';
 import './map_page.dart';
 
 class SearchPage extends StatefulWidget {
+  /*
+    トイレの条件を設定して検索するページ．
+    検索後に条件を満たすトイレのみを表示したマップのページに遷移する．
+  */
+  // routing
   static const routeName = '/searchpage';
-
+  // static values
+  static const String title = '条件からトイレを探す';
+  // constructor
   const SearchPage({Key? key}) : super(key: key);
 
   @override
@@ -17,13 +24,13 @@ class _SearchPageState extends State<SearchPage> {
   bool washlet = false;
   int madeyear = 1900;
 
-  // 製造年月日の所のwidget。見た目は後で変更
-  // ウォシュレットのスイッチや製造年月日を設定すると_SearchPageStateクラスの3つのプロパティ（isfiltered, washlet, madeyear）が変更される。
-  // 変更された変数をmappageに遷移するときに引き渡す。
+  // 製造年月日の所のwidget．見た目は後で変更
+  // ウォシュレットのスイッチや製造年月日を設定すると_SearchPageStateクラスの3つのプロパティ（isfiltered, washlet, madeyear）が変更される．
+  // 変更された変数をmappageに遷移するときに引き渡す．
   Widget _buildDropdownButton(int madeyear, void Function(int?) update) {
     return Row(
       children: [
-        Text(
+        const Text(
           '製造年月日',
         ),
         DropdownButton(
@@ -52,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
             );
           }).toList(),
         ),
-        Text(
+        const Text(
           '年以降',
         ),
       ],
@@ -61,7 +68,7 @@ class _SearchPageState extends State<SearchPage> {
 
   void FilteredMap(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(
-      MapPage.routeName,
+      MapPage.routeNameFromSearch,
       arguments: {
         'washlet': washlet,
         'madeyear': madeyear,
@@ -75,35 +82,33 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'フィルタリング',
+          SearchPage.title,
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            SwitchListTile(
-              title: Text('ウォシュレット'),
-              value: washlet,
-              onChanged: (newValue) {
-                setState(() {
-                  washlet = newValue;
-                  isfiltered = true;
-                });
-              },
-            ),
-            _buildDropdownButton(madeyear, (int? newValue) {
+      body: ListView(
+        children: <Widget>[
+          SwitchListTile(
+            title: const Text('ウォシュレット'),
+            value: washlet,
+            onChanged: (newValue) {
               setState(() {
-                madeyear = newValue!;
+                washlet = newValue;
+                isfiltered = true;
               });
-            }),
-          ],
-        ),
+            },
+          ),
+          _buildDropdownButton(madeyear, (int? newValue) {
+            setState(() {
+              madeyear = newValue!;
+            });
+          }),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
-        // 下の検索アイコンを押すとmappageに推移し、washletと製造年月日の情報もargumentとして渡す。
+        child: const Icon(Icons.search),
+        // 下の検索アイコンを押すとmappageに推移し，washletと製造年月日の情報もargumentとして渡す．
         onPressed: () => FilteredMap(context),
       ),
     );

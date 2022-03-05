@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     'isfiltered': false,
   };
 
-  void _setFilters (Map<String, Object> filterData) {
+  void _setFilters(Map<String, Object> filterData) {
     setState(() {
       _filters = filterData;
     });
@@ -42,26 +42,28 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
         accentColor: Colors.lightGreen,
-        canvasColor: Color.fromRGBO(255, 254, 249, 1),
+        canvasColor: const Color.fromRGBO(255, 254, 249, 1),
         // フォント追加してみた。別にいらないかも
         fontFamily: 'ARIAL',
         textTheme: ThemeData.light().textTheme.copyWith(
-            headline6: TextStyle(
+            headline6: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
-            bodyText1: TextStyle(
+            bodyText1: const TextStyle(
               fontSize: 18,
             )),
       ),
       initialRoute: '/',
       routes: {
-        // searchpage、mappageへのrouteを追加。
-        '/': (ctx) => HomePage(title: 'トイレを探す'),
-        MapPage.routeName: (ctx) => MapPage(filters: _filters),
-        SearchPage.routeName: (ctx) => SearchPage(),
+        HomePage.routeName: (ctx) => const HomePage(),
+        SearchPage.routeName: (ctx) => const SearchPage(),
+        MapPage.routeNameFromSearch: (ctx) =>
+            MapPage(filters: _filters, title: '検索結果'),
+        MapPage.routeName: (ctx) => MapPage(filters: _filters, title: '地図から探す'),
         // global変数(main.dart内の_filtersとそれを更新する関数をfilter_pageに引数として渡している。)
-        FilterPage.routeName: (ctx) => FilterPage(currentFilters: _filters, saveFilters: _setFilters),
+        FilterPage.routeName: (ctx) =>
+            FilterPage(currentFilters: _filters, saveFilters: _setFilters),
       },
     );
   }

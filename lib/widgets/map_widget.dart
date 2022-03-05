@@ -9,9 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapWidget extends StatefulWidget {
   /*
     トイレのデータのjsonファイル(assets/data/toilet.json)から、
-    条件を満たすトイレのみをマップ上に表示するWidget
-    LocationDataとmapControllerを渡して初期化するようになってるのは、それ以外に方法が思いつかなかったからなので、どうしたらいいか(アプリのデザインも含めて)一緒に考えて欲しい
-    今のところはウォシュレットの有無と製造年月日のみでフィルター可能(情報追加してくれてOK)
+    条件を満たすトイレのみをマップ上に表示するWidget.
 
     Attributes
     ----------
@@ -19,12 +17,8 @@ class MapWidget extends StatefulWidget {
       LocationData than has attributes of 'double latitude' and 'doublt longtitude'.
     mapController : Completer<GoogleMapController>
       Controller for a single GoogleMap
-    washletAvailable : bool
-      filter of washlet availability.
-    madeYear : int
-      filter of made year.
   */
-  // 検索時のフィルター用のコンストラクター
+  // constructor for filter
   MapWidget(
       {Key? key,
       required this.location,
@@ -32,17 +26,18 @@ class MapWidget extends StatefulWidget {
       required this.filters})
       : _any = false,
         super(key: key);
-  // 全部のリストを表示する用のコンストラクター
-  MapWidget.any(
-      {Key? key, required this.location, required this.mapController})
-      : filters = {'multipurpose': false,
-        'washlet': false,
-        'madeyear': 1900,
-        'recyclePaper': false,
-        'singlePaper': false,
-        'seatWarmer': false,
-        'isfiltered': false,},
-      _any = true,
+  // constuctor for display all toilets
+  MapWidget.any({Key? key, required this.location, required this.mapController})
+      : filters = {
+          'multipurpose': false,
+          'washlet': false,
+          'madeyear': 1900,
+          'recyclePaper': false,
+          'singlePaper': false,
+          'seatWarmer': false,
+          'isfiltered': false,
+        },
+        _any = true,
         super(key: key);
 
   final LocationData location;
@@ -100,22 +95,28 @@ class _MapMarkersState extends State<MapWidget> {
       }
     }
     for (var element in toiletData) {
-      if (widget.filters['multipurpose'] as bool && !element['metadata']['multipurpose']) {
+      if (widget.filters['multipurpose'] as bool &&
+          !element['metadata']['multipurpose']) {
         continue;
       }
-      if (widget.filters['washlet'] as bool && !element['metadata']['washlet']) {
+      if (widget.filters['washlet'] as bool &&
+          !element['metadata']['washlet']) {
         continue;
       }
-      if (widget.filters['madeyear'] as int >= element['metadata']['madeYear']) {
+      if (widget.filters['madeyear'] as int >=
+          element['metadata']['madeYear']) {
         continue;
       }
-      if (widget.filters['recyclePaper'] as bool && !element['metadata']['recyclePaper']) {
+      if (widget.filters['recyclePaper'] as bool &&
+          !element['metadata']['recyclePaper']) {
         continue;
       }
-      if (widget.filters['singlePaper'] as bool && !element['metadata']['singlePaper']) {
+      if (widget.filters['singlePaper'] as bool &&
+          !element['metadata']['singlePaper']) {
         continue;
       }
-      if (widget.filters['seatWarmer'] as bool && !element['metadata']['seatWarmer']) {
+      if (widget.filters['seatWarmer'] as bool &&
+          !element['metadata']['seatWarmer']) {
         continue;
       }
       _addMarker(element, markers);

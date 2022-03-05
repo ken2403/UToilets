@@ -1,19 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/search_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 import '../widgets/map_widget.dart';
 
 class MapPage extends StatefulWidget {
-  static const routeName = '/mappage';
   /*
-    デフォルトでは、全てのトイレのリストをマップ上に表示
+    条件を満たすトイレの位置をマップ上に表示するページ．
+    デフォルトでは全てのトイレの位置をマップ上に表示．
   */
-  MapPage({Key? key, required this.filters}) : super(key: key);
-
+  // routing
+  static const routeName = '/mappage';
+  static const routeNameFromSearch =
+      SearchPage.routeName + '/mappage_from_search';
+  // constructor
+  const MapPage({Key? key, required this.filters, required this.title})
+      : super(key: key);
   final Map<String, Object> filters;
+  final String title;
+
   @override
   State<MapPage> createState() => MapPageState();
 }
@@ -37,10 +45,10 @@ class MapPageState extends State<MapPage> {
   void _getLocation() async {
     _currentLocation = await _locationService.getLocation();
   }
-  
+
   // widget.filtersはmain.dartから引数として送られてきたフィルター変数情報
-  // それをfilter_page内の変数filtersに代入して、それをmap_widgetに送ることでフィルタリングされたトイレのみ表示するようにしている。
-  // 関数名どっちもfilterでわかりずらくてすみません。
+  // それをfilter_page内の変数filtersに代入して，それをmap_widgetに送ることでフィルタリングされたトイレのみ表示するようにしている．
+  // 関数名どっちもfilterでわかりずらくてすみません．
   @override
   void initState() {
     filters['multipurpose'] = widget.filters['multipurpose'] as bool;
@@ -67,7 +75,6 @@ class MapPageState extends State<MapPage> {
   @override
   void dispose() {
     super.dispose();
-
     // finish the supervising
     _locationChangedListen?.cancel();
   }
@@ -90,7 +97,7 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    // search_pageからの引数をこっちの変数に代入している。
+    // search_pageからの引数をこっちの変数に代入している．
     // final routeArgs =
     //     ModalRoute.of(context)!.settings.arguments as Map<String, Object>;
     // final washlet = routeArgs['washlet'];
@@ -98,7 +105,14 @@ class MapPageState extends State<MapPage> {
     // isfiltered = routeArgs['isfiltered'] as bool;
 
     return Scaffold(
-      // isfilteredがtrueだとMapWidgetを呼び出し、falseだとMapWidget.anyを呼び出している。冗長。後で修正。
+      // isfilteredがtrueだとMapWidgetを呼び出し，falseだとMapWidget.anyを呼び出している．冗長．後で修正．
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(
+          widget.title,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
       body: !(filters['isfiltered'] as bool)
           ? _currentLocation == null
               ? MapWidget.any(
@@ -135,7 +149,7 @@ class MapPageState extends State<MapPage> {
           ),
         ),
         icon: const Icon(
-          Icons.warning,
+          Icons.directions_run,
           color: Colors.white,
         ),
         backgroundColor: Theme.of(context).colorScheme.secondary,

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'filters_page.dart';
-import './map_page.dart';
+import 'package:flutter_app/pages/search_page.dart';
 
-// TODO:drawer作る
+import './map_page_.dart';
+
 class HomeDrawer extends StatelessWidget {
+  /*
+    // TODO:ページの説明
+  */
+  // constructor
   const HomeDrawer({Key? key}) : super(key: key);
-  Widget buildListTile(
-      BuildContext context, String title, IconData icon, VoidCallback tapHandler) {
+
+  Widget buildListTile(BuildContext context, String title, IconData icon,
+      VoidCallback tapHandler) {
     return ListTile(
       leading: Icon(
         icon,
@@ -30,13 +35,12 @@ class HomeDrawer extends StatelessWidget {
             ),
           ),
           buildListTile(context, 'ホーム', Icons.home, () {
-            Navigator.of(context).pushNamed('/');
-          }),
-          buildListTile(context, 'トイレを探す', Icons.location_on, () {
-            Navigator.of(context).pushNamed(MapPage.routeName);
-          }),
-          buildListTile(context, '厳選する', Icons.settings, () {
-            Navigator.of(context).pushNamed(FilterPage.routeName);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return MapPage.any(
+                sex: RadioValueSex.all,
+                barTitle: '検索結果',
+              );
+            }));
           }),
         ],
       ),

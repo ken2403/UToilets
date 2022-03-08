@@ -1,16 +1,34 @@
-// 機能していません．
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import './map_page.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
+import './map_page_.dart';
+import './home_drawer.dart';
+import '../Icon/multipurpose_toilet.dart';
+
+enum RadioValueSex {
+  male,
+  female,
+  all,
+}
+const radioText = <RadioValueSex, String>{
+  RadioValueSex.male: '男性',
+  RadioValueSex.female: '女性',
+};
 
 class SearchPage extends StatefulWidget {
   /*
     トイレの条件を設定して検索するページ．
+    設定した条件の保存もしたり，保存した設定を読み込むことも可能．
     検索後に条件を満たすトイレのみを表示したマップのページに遷移する．
   */
-  // routing
-  static const routeName = '/searchpage';
-  // static values
+  // static variables
+  static const String route = '/search';
   static const String title = '条件からトイレを探す';
   // constructor
   const SearchPage({Key? key}) : super(key: key);
@@ -20,21 +38,31 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  bool isfiltered = false;
+  // set some variables
+  RadioValueSex _chosenSex = RadioValueSex.male;
+  bool isVacant = false;
   bool washlet = false;
-  int madeyear = 1900;
+  bool multipurpose = false;
+  int madeYear = 1900;
+  bool notRecyclePaper = false;
+  bool doublePaper = false;
+  bool seatWarmer = false;
+  bool useSavedParams = false;
+  bool saveParams = false;
+  bool displaySaveButton = true;
+  final String pathToParamJson = 'assets/data/saved_params.json';
 
-  // 製造年月日の所のwidget．見た目は後で変更
-  // ウォシュレットのスイッチや製造年月日を設定すると_SearchPageStateクラスの3つのプロパティ（isfiltered, washlet, madeyear）が変更される．
+  // TODO:見た目を変更
+  // widgets that set the date of manufacture
   // 変更された変数をmappageに遷移するときに引き渡す．
-  Widget _buildDropdownButton(int madeyear, void Function(int?) update) {
+  Widget _buildDropdownButton(int madeYear, void Function(int?) update) {
     return Row(
       children: [
         const Text(
           '製造年月日',
         ),
         DropdownButton(
-          value: madeyear,
+          value: madeYear,
           icon: const Icon(Icons.arrow_downward),
           elevation: 16,
           onChanged: update,
@@ -66,20 +94,75 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  void FilteredMap(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
-      MapPage.routeNameFromSearch,
-      arguments: {
-        'washlet': washlet,
-        'madeyear': madeyear,
-        'isfiltered': isfiltered,
-      },
+  // function to change _chosenSex to selected sex
+  void _onRadioSelected(value) {
+    setState(() {
+      _chosenSex = value;
+    });
+  }
+
+  // function to display filterd map when push the floatingActionButton
+  void _displayFilteredMap(BuildContext ctx) {
+    Navigator.of(ctx).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return MapPage(
+            sex: _chosenSex,
+            barTitle: '検索結果',
+            filters: {
+              'isVacant': isVacant,
+              'washlet': washlet,
+              'multipurpose': multipurpose,
+              'madeYear': madeYear,
+              'notRecyclePaper': notRecyclePaper,
+              'doublePaper': doublePaper,
+              'seatWarmer': seatWarmer,
+            },
+          );
+        },
+      ),
     );
+  }
+
+  Future<void> _loadSavedParams() async {
+    String loadData = await rootBundle.loadString(pathToParamJson);
+    final jsonResponse = json.decode(loadData);
+    setState(() {
+      _chosenSex = jsonResponse['sex'] == 'male'
+          ? RadioValueSex.male
+          : RadioValueSex.female;
+      isVacant = jsonResponse['isVacant'];
+      washlet = jsonResponse['washlet'];
+      multipurpose = jsonResponse['multipurpose'];
+      madeYear = jsonResponse['madeYear'];
+      notRecyclePaper = jsonResponse['notRecyclePaper'];
+      doublePaper = jsonResponse['doublePaper'];
+      seatWarmer = jsonResponse['seatWarmer'];
+    });
+  }
+
+  Future<void> _saveParams() async {
+    var saveData = {
+      "sex": _chosenSex == RadioValueSex.male ? "male" : "female",
+      "isVacant": isVacant,
+      "washlet": washlet,
+      "multipurpose": multipurpose,
+      "madeYear": madeYear,
+      "notRecyclePaper": notRecyclePaper,
+      "doublePaper": doublePaper,
+      "seatWarmer": seatWarmer,
+    };
+    var jsonText = jsonEncode(saveData);
+    // TODO:json 保存
+    // Directory appDocDir = await getLibraryDirectory();
+    // var jsonPath = join(appDocDir.path, pathToParamJson);
+    // await File(jsonPath).writeAsString(jsonText);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // drawer: const HomeDrawer(),
       appBar: AppBar(
         title: Text(
           SearchPage.title,
@@ -88,29 +171,160 @@ class _SearchPageState extends State<SearchPage> {
       ),
       body: ListView(
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Radio(
+                value: RadioValueSex.male,
+                groupValue: _chosenSex,
+                onChanged: (value) => _onRadioSelected(value),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 15),
+                child: Text(radioText[RadioValueSex.male]!),
+              ),
+              Radio(
+                value: RadioValueSex.female,
+                groupValue: _chosenSex,
+                onChanged: (value) => _onRadioSelected(value),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 20),
+                child: Text(radioText[RadioValueSex.female]!),
+              )
+            ],
+          ),
+          SwitchListTile(
+            title: const Text('空きあり'),
+            subtitle: const Text('個室の空きがあるトイレのみをマップ上に表示'),
+            value: isVacant,
+            onChanged: (newValue) {
+              setState(() {
+                isVacant = newValue;
+              });
+            },
+          ),
           SwitchListTile(
             title: const Text('ウォシュレット'),
+            subtitle: const Text('ウォシュレットがあるトイレのみをマップ上に表示'),
             value: washlet,
             onChanged: (newValue) {
               setState(() {
                 washlet = newValue;
-                isfiltered = true;
               });
             },
           ),
-          _buildDropdownButton(madeyear, (int? newValue) {
+          SwitchListTile(
+            secondary: const Icon(multipurpose_toilet.wheelchair),
+            title: const Text('多目的トイレ'),
+            subtitle: const Text('多目的トイレがあるトイレのみをマップ上に表示'),
+            value: multipurpose,
+            onChanged: (newValue) {
+              setState(() {
+                multipurpose = newValue;
+              });
+            },
+          ),
+          _buildDropdownButton(madeYear, (int? newValue) {
             setState(() {
-              madeyear = newValue!;
+              madeYear = newValue!;
             });
           }),
+          SwitchListTile(
+            title: const Text('再生紙'),
+            subtitle: const Text('トイレットペーパーが再生紙ではないトイレのみをマップ上に表示'),
+            value: notRecyclePaper,
+            onChanged: (newValue) {
+              setState(() {
+                notRecyclePaper = newValue;
+              });
+            },
+          ),
+          SwitchListTile(
+            title: const Text('ダブルのトイレットペーパー'),
+            subtitle: const Text('トイレットペーパーがダブルのトイレのみをマップ上に表示'),
+            value: doublePaper,
+            onChanged: (newValue) {
+              setState(() {
+                doublePaper = newValue;
+              });
+            },
+          ),
+          SwitchListTile(
+            title: const Text('温座'),
+            subtitle: const Text('温座があるトイレのみをマップ上に表示'),
+            value: seatWarmer,
+            onChanged: (newValue) {
+              setState(() {
+                seatWarmer = newValue;
+              });
+            },
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Checkbox(
+                    value: useSavedParams,
+                    onChanged: (newValue) {
+                      setState(() {
+                        useSavedParams = newValue!;
+                        if (useSavedParams) {
+                          _loadSavedParams();
+                          displaySaveButton = false;
+                          saveParams = false;
+                        } else {
+                          displaySaveButton = true;
+                          saveParams = false;
+                        }
+                      });
+                    },
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text('保存した検索条件を使用する'),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Checkbox(
+                    value: saveParams,
+                    onChanged: displaySaveButton
+                        ? (newValue) {
+                            setState(() {
+                              saveParams = newValue!;
+                            });
+                          }
+                        : null,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'この検索条件を保存する',
+                      style: TextStyle(
+                          color: displaySaveButton
+                              ? Colors.black87
+                              : Colors.black38),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.search),
-        // 下の検索アイコンを押すとmappageに推移し，washletと製造年月日の情報もargumentとして渡す．
-        onPressed: () => FilteredMap(context),
-      ),
+          child: const Icon(Icons.search),
+          // when pressing the search button, change the page to filtered map.
+          onPressed: () {
+            _displayFilteredMap(context);
+            saveParams ? _saveParams() : null;
+          }),
     );
   }
 }

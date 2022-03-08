@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/home_drawer.dart';
 import '../Icon/multipurpose_toilet.dart';
 
 class FilterPage extends StatefulWidget {
   /*
     TODO:ページの説明
   */
-  // routing
-  static const routeName = '/filters';
   // constructor
   const FilterPage(
       {Key? key, required this.currentFilters, required this.saveFilters})
@@ -20,34 +17,34 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
+  // set some variables
   bool isfiltered = false;
   bool multipurpose = false;
   bool washlet = false;
-  int madeyear = 1900;
+  int madeYear = 1900;
   bool recyclePaper = false;
   bool singlePaper = false;
   bool seatWarmer = false;
 
-  //
   @override
   void initState() {
     multipurpose = widget.currentFilters['multipurpose'] as bool;
     washlet = widget.currentFilters['washlet'] as bool;
-    madeyear = widget.currentFilters['madeyear'] as int;
+    madeYear = widget.currentFilters['madeYear'] as int;
     recyclePaper = widget.currentFilters['recyclePaper'] as bool;
     singlePaper = widget.currentFilters['singlePaper'] as bool;
     seatWarmer = widget.currentFilters['seatWarmer'] as bool;
     super.initState();
   }
 
-  Widget _buildDropdownButton(int madeyear, void Function(int?) update) {
+  Widget _buildDropdownButton(int madeYear, void Function(int?) update) {
     return ListTile(
       title: Text(
         '製造年',
       ),
       subtitle: Text('設定年以降に作られた場所のみ表示'),
       trailing: DropdownButton(
-        value: madeyear,
+        value: madeYear,
         icon: const Icon(Icons.arrow_downward),
         elevation: 16,
         onChanged: update,
@@ -86,7 +83,7 @@ class _FilterPageState extends State<FilterPage> {
               final selectedFilters = {
                 'multipurpose': multipurpose,
                 'washlet': washlet,
-                'madeyear': madeyear,
+                'madeYear': madeYear,
                 'recyclePaper': recyclePaper,
                 'singlePaper': singlePaper,
                 'seatWarmer': seatWarmer,
@@ -164,9 +161,9 @@ class _FilterPageState extends State<FilterPage> {
                       isfiltered = true;
                     });
                   }),
-              _buildDropdownButton(madeyear, (int? newValue) {
+              _buildDropdownButton(madeYear, (int? newValue) {
                 setState(() {
-                  madeyear = newValue!;
+                  madeYear = newValue!;
                   isfiltered = true;
                 });
               }),

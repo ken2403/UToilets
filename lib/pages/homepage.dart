@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/filters_page.dart';
-import './search_page.dart';
 
-import './map_page.dart';
-import './home_drawer.dart';
+import './bottom_pages.dart';
+import '../widgets/bottom_navigator.dart';
+import '../widgets/page_navigator.dart';
 
 class HomePage extends StatefulWidget {
   /*
     アプリ起動時の最初のページ．
     bottomNavigationBarで画面切り替え．
   */
-  // routing
-  static const routeName = '/';
   // constructor
   const HomePage({Key? key}) : super(key: key);
 
@@ -20,87 +17,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // bottomNavigationBarを押した時のページ遷移の関数
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  // set some variables
+  PageItem _currentPage = PageItem.values[0];
+  final Map<PageItem, GlobalKey<NavigatorState>> _navigatorKeys = {
+    PageItem.search: GlobalKey<NavigatorState>(),
+    PageItem.map: GlobalKey<NavigatorState>(),
+    PageItem.mypage: GlobalKey<NavigatorState>(),
+  };
+
+  // function to change the display widget
+  Widget _buildPageItem(PageItem pageItem, String root) {
+    return Offstage(
+      offstage: _currentPage != pageItem,
+      child: PageNavigator(
+        navigationKey: _navigatorKeys[pageItem]!,
+        pageItem: pageItem,
+        routeName: root,
+        routeBuilder: routeBuilder,
+      ),
+    );
   }
 
-  // searchで条件フィルターしてmap上に条件のデータを表示する際には./widgets/map_widget.dart を使うとフィルターできるようにしてある(詳細はそっち確認)
-  // dataの形式については assets/data/toilet.jsonを確認して(とりあえず作っただけだから今後変更可能)
-  String mapTitle = '地図からトイレを探す';
-  Map<String, Object> _filters = {
-    'multipurpose': false,
-    'washlet': false,
-    'madeyear': 1900,
-    'recyclePaper': false,
-    'singlePaper': false,
-    'seatWarmer': false,
-    'isfiltered': false,
-  };
-  void _setFilters(Map<String, Object> filterData) {
-    setState(() {
-      _filters = filterData;
-    });
+  // function to chante page when tapped other bottom navigation bar item
+  void _onSelect(PageItem pageItem) {
+    if (_currentPage == pageItem) {
+      _navigatorKeys[pageItem]!
+          .currentState!
+          .popUntil((route) => route.isFirst);
+    } else {
+      setState(() {
+        _currentPage = pageItem;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _bodyWidgets = [
-      // index0: searchの画面に対応
-      const SearchPage(),
-      // index1: mapの画面に対応
-      const MapPage(
-        filters: {
-          'multipurpose': false,
-          'washlet': false,
-          'madeyear': 1900,
-          'recyclePaper': false,
-          'singlePaper': false,
-          'seatWarmer': false,
-          'isfiltered': false,
-        },
-        title: '地図からトイレを探す',
-      ),
-      FilterPage(
-        currentFilters: const {
-          'multipurpose': false,
-          'washlet': false,
-          'madeyear': 1900,
-          'recyclePaper': false,
-          'singlePaper': false,
-          'seatWarmer': false,
-          'isfiltered': false,
-        },
-        saveFilters: _setFilters,
-      )
-    ];
     return Scaffold(
-      drawer: const HomeDrawer(),
-      body: _bodyWidgets[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'search',
-            tooltip: SearchPage.title,
+      body: Stack(
+        children: <Widget>[
+          _buildPageItem(
+            PageItem.search,
+            '/search',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
-            label: 'map',
-            tooltip: '地図からトイレを探す',
+          _buildPageItem(
+            PageItem.map,
+            '/map',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: '設定',
-          )
+          _buildPageItem(
+            PageItem.mypage,
+            '/mypage',
+          ),
         ],
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        selectedFontSize: 15,
+      ),
+      bottomNavigationBar: BottomNavigation(
+        currentPage: _currentPage,
+        onSelect: _onSelect,
       ),
     );
   }

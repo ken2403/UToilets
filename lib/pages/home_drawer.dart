@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/search_page.dart';
 
-import './map_page_.dart';
+import './map_page.dart';
 
 class HomeDrawer extends StatelessWidget {
   /*

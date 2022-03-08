@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../pages/bottom_pages.dart';
 import '../pages/search_page.dart';
-import '../pages/map_page_.dart';
+import '../pages/map_page.dart';
 import '../pages/mypage_page.dart';
 
 // setting up contents of bottom navigation bar with using PageItem

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './search_page.dart';
-import './map_page_.dart';
+import './map_page.dart';
 import './mypage_page.dart';
 
 // enum of bottom navigation pages

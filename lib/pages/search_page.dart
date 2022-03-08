@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import './map_page_.dart';
+import './map_page.dart';
 import './home_drawer.dart';
 import '../Icon/multipurpose_toilet.dart';
 

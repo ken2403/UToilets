@@ -1,0 +1,10 @@
+{
+    "sex": "male",
+    "isVacant": true,
+    "washlet": false,
+    "multipurpose": false,
+    "madeYear": 1900,
+    "notRecyclePaper": false,
+    "doublePaper": false,
+    "seatWarmer": false
+}

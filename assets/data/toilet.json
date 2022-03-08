@@ -2,6 +2,30 @@
     "toiletData":
     [
         {
+            "ID":10011,
+            "location":"library_1f",
+            "locationJa":"総合図書館1階",
+            "floor":1,
+            "lat":35.7114084,
+            "lng":139.7608399,
+            "metadata":
+            {
+                "maleSmall":3,
+                "maleBigYou":2,
+                "maleBigWa":0,
+                "femaleBigYou":3,
+                "femaleBigWa":0,
+                "multipurpose":true,
+                "washlet": true,
+                "madeYear": 2020,
+                "notRecyclePaper":false,
+                "doublePaper":true,
+                "seatWarmer":true,
+                "image":null
+            }
+        },
+        {
+            "ID":20411,
             "location":"eng_4_1f",
             "locationJa":"ダミー工4-1Fウォシュレットなし",
             "floor":1,
@@ -10,18 +34,21 @@
             "metadata":
             {
                 "maleSmall":5,
-                "maleBig":2,
-                "femaleBig":3,
+                "maleBigYou":2,
+                "maleBigWa":0,
+                "femaleBigYou":3,
+                "femaleBigWa":0,
                 "multipurpose":true,
                 "washlet": false,
                 "madeYear": 2017,
-                "recyclePaper":false,
-                "singlePaper":true,
+                "notRecyclePaper":false,
+                "doublePaper":false,
                 "seatWarmer":true,
                 "image":null
             }
         },
         {
+            "ID":20421,
             "location":"eng_4_2f",
             "locationJa":"ダミー工学部4号館2F",
             "floor":2,
@@ -30,33 +57,15 @@
             "metadata":
             {
                 "maleSmall":3,
-                "maleBig":2,
-                "femaleBig":3,
-                "multipurpose":true,
+                "maleBigYou":2,
+                "maleBigWa":0,
+                "femaleBigYou":3,
+                "femaleBigWa":0,
+                "multipurpose":false,
                 "washlet": true,
                 "madeYear": 2017,
-                "recyclePaper":false,
-                "singlePaper":true,
-                "seatWarmer":true,
-                "image":null
-            }
-        },
-        {
-            "location":"temp_current_location",
-            "locationJa":"仮の現在地",
-            "floor":1,
-            "lat":35.71064693472433,
-            "lng":139.76090257347977,
-            "metadata":
-            {
-                "maleSmall":3,
-                "maleBig":2,
-                "femaleBig":3,
-                "multipurpose":true,
-                "washlet": true,
-                "madeYear": 2010,
-                "recyclePaper":false,
-                "singlePaper":true,
+                "notRecyclePaper":false,
+                "doublePaper":true,
                 "seatWarmer":true,
                 "image":null
             }

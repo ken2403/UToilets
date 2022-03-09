@@ -286,6 +286,7 @@ class MapPageState extends State<MapPage> {
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
+                    // TODO:ページ遷移
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],

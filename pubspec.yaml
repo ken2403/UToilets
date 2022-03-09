@@ -36,22 +36,25 @@ dependencies:
   # Google map package for flutter
   google_maps_flutter: ^2.1.1
 
-  # current location
+  # get current location
   location: ^4.3.0
   geolocator: ^8.2.0
 
-  google_polyline_algorithm: ^3.1.0
+  # draw polyline on map
   flutter_polyline_points: ^1.0.0
 
   http: ^0.13.4
   # http client for Dart
   dio: ^4.0.4
 
-  # permission handler
+  # device permission handler
   permission_handler: ^9.2.0
 
-  # path
+  # get path on device
   path_provider: ^2.0.9
+
+  # platform-specific persistent storage for simple data
+  shared_preferences: ^2.0.13
 
 flutter_native_splash:
   color: "#ffffff"

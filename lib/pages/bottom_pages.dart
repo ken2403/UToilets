@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import './search_page.dart';
 import './map_page.dart';
-import './mypage_page.dart';
+import './mypage/mypage_page.dart';
 
 /* 
   'lib/pages/homepage.dart'のHomePage中のbottomNavigationBarのページの設定．

@@ -91,7 +91,6 @@ class MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-
     // getting current location
     _getLocation();
   }
@@ -121,16 +120,7 @@ class MapPageState extends State<MapPage> {
                   : BitmapDescriptor.hueRed,
             ),
             // tap anchor
-            onTap: () async {
-              _onTapAnchorInfoWindow(toiletPosition);
-              await showModalBottomSheet<int>(
-                context: context,
-                builder: (BuildContext context) {
-                  // TODO:モーダルの中身
-                  return Container();
-                },
-              );
-            },
+            onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
             infoWindow: InfoWindow(
               title: toiletDataElement['locationJa'] + '    ' + 'Tapしてここへ行く',
               snippet: widget.sex == ChosenSex.all
@@ -142,16 +132,7 @@ class MapPageState extends State<MapPage> {
                       : '女性洋式:${toiletDataElement['metadata']['femaleBigYou']} 多目的トイレ:' +
                           multipurpose,
               // tap info window
-              onTap: () async {
-                _onTapAnchorInfoWindow(toiletPosition);
-                await showModalBottomSheet<int>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // TODO:モーダルの中身
-                    return Container();
-                  },
-                );
-              },
+              onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
             ),
           ),
         );
@@ -160,7 +141,7 @@ class MapPageState extends State<MapPage> {
   }
 
   // function that called when the map anchor of info window is tapped
-  Future<void> _onTapAnchorInfoWindow(LatLng position) async {
+  Future<void> _tapAnchorOrInfoWindow(LatLng position) async {
     final GoogleMapController controller = await _controller.future;
     position = LatLng(position.latitude - 0.0013, position.longitude);
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
@@ -168,6 +149,13 @@ class MapPageState extends State<MapPage> {
       zoom: 17.5,
       tilt: 50.0,
     )));
+    await showModalBottomSheet<int>(
+      context: context,
+      builder: (BuildContext context) {
+        // TODO:モーダルの中身
+        return Container();
+      },
+    );
   }
 
   // function to extract the toilets that match the setting conditions from .json
@@ -262,7 +250,8 @@ class MapPageState extends State<MapPage> {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  onPressed: () => Navigator.pop(context),
+                  // TODO:ページ遷移
+                  onPressed: () => Navigator.of(context).pop,
                 ),
               ],
             );
@@ -271,30 +260,64 @@ class MapPageState extends State<MapPage> {
       }
       // show routes if they are close enough to the university
       else {
-        // switch the center of view point to the current location
-        controller.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: LatLng(
-                    _currentLocation!.latitude, _currentLocation!.longitude),
-                zoom: 17,
-                tilt: 50.0),
-          ),
-        );
-        // show directions to the nearest marker
-        final directions = await DirectionsRepository().getDirections(
-            origin: LatLng(
-              _currentLocation!.latitude,
-              _currentLocation!.longitude,
-            ),
-            destination: LatLng(
-              minMarker.position.latitude,
-              minMarker.position.longitude,
-            ));
-        if (directions != null) {
-          setState(() => _directionsInfo = directions);
+        // if the current location cannot be obtained, ask permission
+        if (_currentLocation == null) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) {
+              return AlertDialog(
+                title: const Text("現在地が取得できませんでした"),
+                content: const Text("位置情報の使用を許可しますか"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    onPressed: () => {},
+                  ),
+                  TextButton(
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+            },
+          );
         } else {
-          _directionsInfo = null;
+          // switch the center of view point to the current location
+          controller.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(
+                      _currentLocation!.latitude, _currentLocation!.longitude),
+                  zoom: 17,
+                  tilt: 50.0),
+            ),
+          );
+          // show directions to the nearest marker
+          final directions = await DirectionsRepository().getDirections(
+              origin: LatLng(
+                _currentLocation!.latitude,
+                _currentLocation!.longitude,
+              ),
+              destination: LatLng(
+                minMarker.position.latitude,
+                minMarker.position.longitude,
+              ));
+          if (directions != null) {
+            setState(() => _directionsInfo = directions);
+          } else {
+            _directionsInfo = null;
+          }
         }
       }
     }

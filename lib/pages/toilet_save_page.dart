@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
-class ToiletPreservePage extends StatefulWidget {
+class ToiletSavePage extends StatefulWidget {
   /*
     TODO:説明
   */
   // static values
   static const String title = '保存したトイレ';
   // constructor
-  const ToiletPreservePage({Key? key}) : super(key: key);
+  const ToiletSavePage({Key? key}) : super(key: key);
 
   @override
-  State<ToiletPreservePage> createState() => _ToiletPreservePageState();
+  State<ToiletSavePage> createState() => _ToiletSavePageState();
 }
 
-class _ToiletPreservePageState extends State<ToiletPreservePage> {
+class _ToiletSavePageState extends State<ToiletSavePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text(ToiletPreservePage.title),
+        title: const Text(ToiletSavePage.title),
       ),
       body: const Center(
-        child: Text(ToiletPreservePage.title),
+        child: Text(ToiletSavePage.title),
       ),
     );
   }

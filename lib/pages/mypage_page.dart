@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './condition_preserve_page.dart';
-import './toilet_preserve_page.dart';
+import './condition_save_page.dart';
+import './toilet_save_page.dart';
 import './setting_page.dart';
 import './feedback_page.dart';
 
@@ -22,45 +22,12 @@ class MyPage extends StatefulWidget {
 
 // TODO:UI
 class _MyPageState extends State<MyPage> {
-  // function to go to preserve condition page
-  void _goToConditionPage(BuildContext ctx) {
+// function to go to the next page when press the button
+  void _goToNextPage(BuildContext ctx, Widget page) {
     Navigator.of(ctx).push(
       MaterialPageRoute(
         builder: (context) {
-          return const ConditionPreservePage();
-        },
-      ),
-    );
-  }
-
-  // function to go to preserve toilet page
-  void _goToToiletPage(BuildContext ctx) {
-    Navigator.of(ctx).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return const ToiletPreservePage();
-        },
-      ),
-    );
-  }
-
-  // function to go to setting page
-  void _goToSettingPage(BuildContext ctx) {
-    Navigator.of(ctx).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return const SettingPage();
-        },
-      ),
-    );
-  }
-
-  // function to go to feed back page
-  void _goToFeedBackPage(BuildContext ctx) {
-    Navigator.of(ctx).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return const FeedBackPage();
+          return page;
         },
       ),
     );
@@ -79,7 +46,7 @@ class _MyPageState extends State<MyPage> {
         crossAxisSpacing: 15,
         children: <Widget>[
           ElevatedButton(
-            onPressed: () => _goToConditionPage(context),
+            onPressed: () => _goToNextPage(context, const ConditionSavePage()),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -88,7 +55,7 @@ class _MyPageState extends State<MyPage> {
                   size: 30,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const Text(ConditionPreservePage.title),
+                const Text(ConditionSavePage.title),
               ],
             ),
             style: ElevatedButton.styleFrom(
@@ -102,7 +69,7 @@ class _MyPageState extends State<MyPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () => _goToToiletPage(context),
+            onPressed: () => _goToNextPage(context, const ToiletSavePage()),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -111,7 +78,7 @@ class _MyPageState extends State<MyPage> {
                   size: 30,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const Text(ToiletPreservePage.title),
+                const Text(ToiletSavePage.title),
               ],
             ),
             style: ElevatedButton.styleFrom(
@@ -125,7 +92,7 @@ class _MyPageState extends State<MyPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () => _goToSettingPage(context),
+            onPressed: () => _goToNextPage(context, const SettingPage()),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -148,7 +115,7 @@ class _MyPageState extends State<MyPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () => _goToFeedBackPage(context),
+            onPressed: () => _goToNextPage(context, const FeedBackPage()),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[

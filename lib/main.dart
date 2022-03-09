@@ -20,8 +20,11 @@ class _MyAppState extends State<MyApp> {
       title: 'Search available toilet',
       home: const HomePage(),
       theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        accentColor: Colors.lightGreen,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.lightBlue,
+        ).copyWith(
+          secondary: Colors.lightGreen,
+        ),
         canvasColor: const Color.fromRGBO(255, 254, 249, 1),
         // フォント追加してみた。別にいらないかも
         fontFamily: 'ARIAL',

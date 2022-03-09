@@ -216,84 +216,121 @@ class MapPageState extends State<MapPage> {
   // functon called when tapped floatingActionButton
   Future<void> _goNearest(Set<Marker> markers) async {
     final GoogleMapController controller = await _controller.future;
+    // if the current location cannot be obtained, ask permission
     if (_currentLocation == _centerOfUT) {
-      return;
-    } else {
-      double minMeters = 5.0e3;
-      Marker minMarker = markers.first;
-      for (var element in markers) {
-        double distanceInMeters = Geolocator.distanceBetween(
-          _currentLocation!.latitude,
-          _currentLocation!.longitude,
-          element.position.latitude,
-          element.position.longitude,
-        );
-        if (minMeters > distanceInMeters) {
-          minMeters = distanceInMeters;
-          minMarker = element;
-        }
-      }
-      // show dialog if distance from university is too far
-      if (minMeters >= 5.0e3) {
+      showDialog(
+        context: context,
+        useRootNavigator: false,
+        barrierDismissible: true,
+        builder: (_) {
+          return AlertDialog(
+            title: const Text("現在地が取得できませんでした"),
+            content: const Text("位置情報の使用を許可しますか"),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                // TODO:okを押したらpermissonを表示
+                onPressed: () => {},
+              ),
+              TextButton(
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    // if the current location is valid
+    else {
+      // if there is no markers that meet the criteria, instruct the user to redo the search
+      if (markers.isEmpty) {
         showDialog(
           context: context,
-          barrierDismissible: false,
+          useRootNavigator: false,
+          barrierDismissible: true,
           builder: (_) {
             return AlertDialog(
-              title: const Text("トイレが遠すぎます！"),
-              content: const Text("本郷キャンパスの近くで試してください"),
+              title: const Text("条件を満たすトイレはありません"),
+              content: const Text("もう一度条件を設定してください"),
               actions: [
                 TextButton(
                   child: Text(
-                    "Cancel",
+                    "もう一度検索",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  // TODO:ページ遷移
-                  onPressed: () => Navigator.of(context).pop,
+                  onPressed: () =>
+                      Navigator.of(context).popUntil((route) => route.isFirst),
+                ),
+                TextButton(
+                  child: Text(
+                    "Close",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             );
           },
         );
       }
-      // show routes if they are close enough to the university
+      // if there is a marker, calculate the distance between current locatin and the nearest toilet
       else {
-        // if the current location cannot be obtained, ask permission
-        if (_currentLocation == null) {
+        double minMeters = 5.0e3;
+        Marker minMarker = markers.first;
+        for (var element in markers) {
+          double distanceInMeters = Geolocator.distanceBetween(
+            _currentLocation!.latitude,
+            _currentLocation!.longitude,
+            element.position.latitude,
+            element.position.longitude,
+          );
+          if (minMeters > distanceInMeters) {
+            minMeters = distanceInMeters;
+            minMarker = element;
+          }
+        }
+        // show dialog if distance from university is too far
+        if (minMeters >= 5.0e3) {
           showDialog(
             context: context,
-            barrierDismissible: false,
+            useRootNavigator: false,
+            barrierDismissible: true,
             builder: (_) {
               return AlertDialog(
-                title: const Text("現在地が取得できませんでした"),
-                content: const Text("位置情報の使用を許可しますか"),
-                actions: <Widget>[
+                title: const Text("トイレが遠すぎます！"),
+                content: const Text("本郷キャンパスの近くで試してください"),
+                actions: [
                   TextButton(
                     child: Text(
-                      "OK",
+                      "Close",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
-                    onPressed: () => {},
-                  ),
-                  TextButton(
-                    child: Text(
-                      "Cancel",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    // TODO:ページ遷移
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
               );
             },
           );
-        } else {
+        }
+        // show routes if they are close enough to the university
+        else {
           // switch the center of view point to the current location
           controller.animateCamera(
             CameraUpdate.newCameraPosition(
@@ -357,7 +394,7 @@ class MapPageState extends State<MapPage> {
                 if (_directionsInfo != null)
                   Polyline(
                     polylineId: const PolylineId('overview_polyline'),
-                    color: Colors.red,
+                    color: Colors.redAccent,
                     width: 5,
                     points: _directionsInfo!.polylinePoints
                         .map((e) => LatLng(e.latitude, e.longitude))

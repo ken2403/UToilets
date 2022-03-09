@@ -26,7 +26,7 @@ class SearchPage extends StatefulWidget {
     設定した条件の保存もしたり，保存した設定を読み込むことも可能．
     検索後に条件を満たすトイレのみを表示したマップのページに遷移する．
   */
-  // static variables
+  // static values
   static const String route = '/search';
   static const String title = '条件からトイレを探す';
   // constructor

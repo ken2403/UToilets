@@ -105,13 +105,10 @@ class MapPageState extends State<MapPage> {
 
   // function to create a one marker from information of a double toilet
   void _addMarker(Map toiletDataElement, List vacantList, Set markersSet) {
-    // display for whether there is a multi-purpose restroom or not
     String multipurpose =
         toiletDataElement['metadata']['multipurpose'] ? 'あり' : 'なし';
-    // toilet position
     LatLng toiletPosition =
         LatLng(toiletDataElement['lat'], toiletDataElement['lng']);
-    // add marker to markersSet
     setState(
       () {
         markersSet.add(
@@ -123,6 +120,17 @@ class MapPageState extends State<MapPage> {
                   ? BitmapDescriptor.hueGreen
                   : BitmapDescriptor.hueRed,
             ),
+            // tap anchor
+            onTap: () async {
+              _onTapAnchorInfoWindow(toiletPosition);
+              await showModalBottomSheet<int>(
+                context: context,
+                builder: (BuildContext context) {
+                  // TODO:モーダルの中身
+                  return Container();
+                },
+              );
+            },
             infoWindow: InfoWindow(
               title: toiletDataElement['locationJa'] + '    ' + 'Tapしてここへ行く',
               snippet: widget.sex == ChosenSex.all
@@ -133,22 +141,31 @@ class MapPageState extends State<MapPage> {
                           multipurpose
                       : '女性洋式:${toiletDataElement['metadata']['femaleBigYou']} 多目的トイレ:' +
                           multipurpose,
-              // TODO: tap InfoWindow
-              onTap: () => {},
+              // tap info window
+              onTap: () async {
+                _onTapAnchorInfoWindow(toiletPosition);
+                await showModalBottomSheet<int>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // TODO:モーダルの中身
+                    return Container();
+                  },
+                );
+              },
             ),
-            onTap: () => _onTapAnchor(toiletPosition),
           ),
         );
       },
     );
   }
 
-  // function that called when the map anchor is tapped
-  Future<void> _onTapAnchor(LatLng position) async {
+  // function that called when the map anchor of info window is tapped
+  Future<void> _onTapAnchorInfoWindow(LatLng position) async {
     final GoogleMapController controller = await _controller.future;
+    position = LatLng(position.latitude - 0.0013, position.longitude);
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       target: position,
-      zoom: 17,
+      zoom: 17.5,
       tilt: 50.0,
     )));
   }

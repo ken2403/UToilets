@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class MyPage extends StatefulWidget {
   /*
-    // TODO:ページの説明
+    bottomNavigationBarのindex=2から遷移するページ．
+    個人の設定や保存した情報を確認できる．
   */
   // static variables
   static const String route = '/mypage';
@@ -14,6 +15,7 @@ class MyPage extends StatefulWidget {
   State<MyPage> createState() => _MyPageState();
 }
 
+// TODO:UI
 class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {

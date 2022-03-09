@@ -13,7 +13,8 @@ import './search_page.dart';
 class MapPage extends StatefulWidget {
   /*
     条件を満たすトイレの位置をマップ上に表示するページ．
-    デフォルトでは全てのトイレの位置をマップ上に表示．
+    bottomNavigationBarのindex=0から遷移できるページでは，全てのトイレの位置をマップ上に表示．
+    'lib/pages/search_page.dart'から遷移するページでは，検索条件にマッチするトイレのみっマップ上に表示する．
   */
   // static variables
   static const String route = '/map';
@@ -40,7 +41,7 @@ class MapPage extends StatefulWidget {
         _any = true,
         super(key: key);
   // TODO:sex
-  final RadioValueSex sex;
+  final ChosenSex sex;
   final String barTitle;
   final Map<String, Object> filters;
   final bool _any;
@@ -53,8 +54,8 @@ class MapPageState extends State<MapPage> {
   // set constants
   final _centerOfUT =
       Position.fromMap({'latitude': 35.71281, 'longitude': 139.76203});
-  final String pathToToiletJson = 'assets/data/toilet.json';
-  final String pathToVacantInfo = 'assets/data/dummy_isvacant.json';
+  final String _pathToToiletJson = 'assets/data/toilet.json';
+  final String _pathToVacantInfo = 'assets/data/dummy_isvacant.json';
   // initialize some variables
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> _markers = {};
@@ -94,7 +95,7 @@ class MapPageState extends State<MapPage> {
     // getting current location
     _getLocation();
   }
-
+  // TODO:dispose
   // @override
   // void dispose() {
   //   final GoogleMapController controller = await _controller.future;
@@ -124,16 +125,16 @@ class MapPageState extends State<MapPage> {
             ),
             infoWindow: InfoWindow(
               title: toiletDataElement['locationJa'] + '    ' + 'Tapしてここへ行く',
-              snippet: widget.sex == RadioValueSex.all
+              snippet: widget.sex == ChosenSex.all
                   ? '女性洋式:${toiletDataElement['metadata']['femaleBigYou']} 男性洋式:${toiletDataElement['metadata']['maleBigYou']} 多目的トイレ:' +
                       multipurpose
-                  : widget.sex == RadioValueSex.male
+                  : widget.sex == ChosenSex.male
                       ? '男性洋式:${toiletDataElement['metadata']['maleBigYou']} 小便器:${toiletDataElement['metadata']['maleSmall']} 多目的トイレ:' +
                           multipurpose
                       : '女性洋式:${toiletDataElement['metadata']['femaleBigYou']} 多目的トイレ:' +
                           multipurpose,
               // TODO: tap InfoWindow
-              onTap: () => print('tap info window'),
+              onTap: () => {},
             ),
             onTap: () => _onTapAnchor(toiletPosition),
           ),
@@ -155,13 +156,13 @@ class MapPageState extends State<MapPage> {
   // function to extract the toilets that match the setting conditions from .json
   Future getMarkers(Set<Marker> markers) async {
     // get toilet data from json and parse to List
-    String loadData = await rootBundle.loadString(pathToToiletJson);
+    String loadData = await rootBundle.loadString(_pathToToiletJson);
     final jsonResponse = json.decode(loadData);
     final List toiletData = jsonResponse['toiletData'];
     // get vacant info
-    String loadVacant = await rootBundle.loadString(pathToVacantInfo);
+    String loadVacant = await rootBundle.loadString(_pathToVacantInfo);
     final jsonVacant = json.decode(loadVacant);
-    // filterのある変数(multipurposeなど)がtureになっていて、かつその変数がfalseのトイレのみスルーしてそうでないトイレは含めるというアルゴリズムに変更した。
+    // filterのある変数(multipurposeなど)がtureになっていて，かつその変数がfalseのトイレのみスルーしてそうでないトイレは含めるというアルゴリズムに変更した．
     if (widget._any) {
       for (var element in toiletData) {
         // TODO:sex
@@ -171,7 +172,7 @@ class MapPageState extends State<MapPage> {
       }
     } else {
       for (var element in toiletData) {
-        List vacantList = widget.sex == RadioValueSex.male
+        List vacantList = widget.sex == ChosenSex.male
             ? jsonVacant[element['ID'].toString()]["maleBigYou"]
             : jsonVacant[element['ID'].toString()]["femaleBigYou"];
         if (widget.filters['isVacant'] as bool &&

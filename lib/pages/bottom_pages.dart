@@ -4,6 +4,11 @@ import './search_page.dart';
 import './map_page.dart';
 import './mypage_page.dart';
 
+/* 
+  'lib/pages/homepage.dart'のHomePage中のbottomNavigationBarのページの設定．
+  routeとコンストラクトしたWidgetを設定する．
+*/
+
 // enum of bottom navigation pages
 enum PageItem {
   search,
@@ -11,11 +16,11 @@ enum PageItem {
   mypage,
 }
 
-// function to return the page of setting route
+// setting page routes and widgets
 Map<String, Widget Function(BuildContext)> routeBuilder(BuildContext context) =>
     {
       SearchPage.route: (context) => const SearchPage(),
       MapPage.route: (context) =>
-          MapPage.any(sex: RadioValueSex.all, barTitle: MapPage.title),
+          MapPage.any(sex: ChosenSex.all, barTitle: MapPage.title),
       MyPage.route: (context) => const MyPage(),
     };

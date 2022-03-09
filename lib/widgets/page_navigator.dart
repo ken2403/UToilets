@@ -4,7 +4,8 @@ import '../pages/bottom_pages.dart';
 
 class PageNavigator extends StatelessWidget {
   /*
-    TODO:説明
+    ページ遷移をしてもbottomNavigationBarが残るようにするWidget．
+    'lib/paegs/bottom_pages.dart'で指定されたrouteでページが遷移する．
   */
   // constructor
   const PageNavigator({

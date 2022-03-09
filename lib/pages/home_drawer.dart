@@ -5,7 +5,7 @@ import './map_page.dart';
 
 class HomeDrawer extends StatelessWidget {
   /*
-    // TODO:ページの説明
+    Drawerを構成するWidget
   */
   // constructor
   const HomeDrawer({Key? key}) : super(key: key);
@@ -17,8 +17,8 @@ class HomeDrawer extends StatelessWidget {
         icon,
         size: 26,
       ),
-      title: Text(title, style: TextStyle(fontFamily: 'OpenSans')),
-      trailing: Icon(Icons.arrow_forward),
+      title: Text(title, style: const TextStyle(fontFamily: 'OpenSans')),
+      trailing: const Icon(Icons.arrow_forward),
       onTap: tapHandler,
     );
   }
@@ -37,7 +37,7 @@ class HomeDrawer extends StatelessWidget {
           buildListTile(context, 'ホーム', Icons.home, () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return MapPage.any(
-                sex: RadioValueSex.all,
+                sex: ChosenSex.all,
                 barTitle: '検索結果',
               );
             }));

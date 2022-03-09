@@ -3,7 +3,8 @@ import '../Icon/multipurpose_toilet.dart';
 
 class FilterPage extends StatefulWidget {
   /*
-    TODO:ページの説明
+    検索条件を設定するページ
+    このあとこれをどう使うかは今のところ未定
   */
   // constructor
   const FilterPage(
@@ -18,31 +19,31 @@ class FilterPage extends StatefulWidget {
 
 class _FilterPageState extends State<FilterPage> {
   // set some variables
-  bool isfiltered = false;
-  bool multipurpose = false;
-  bool washlet = false;
-  int madeYear = 1900;
-  bool recyclePaper = false;
-  bool singlePaper = false;
-  bool seatWarmer = false;
+  bool _isfiltered = false;
+  bool _multipurpose = false;
+  bool _washlet = false;
+  int _madeYear = 1900;
+  bool _recyclePaper = false;
+  bool _singlePaper = false;
+  bool _seatWarmer = false;
 
   @override
   void initState() {
-    multipurpose = widget.currentFilters['multipurpose'] as bool;
-    washlet = widget.currentFilters['washlet'] as bool;
-    madeYear = widget.currentFilters['madeYear'] as int;
-    recyclePaper = widget.currentFilters['recyclePaper'] as bool;
-    singlePaper = widget.currentFilters['singlePaper'] as bool;
-    seatWarmer = widget.currentFilters['seatWarmer'] as bool;
+    _multipurpose = widget.currentFilters['multipurpose'] as bool;
+    _washlet = widget.currentFilters['washlet'] as bool;
+    _madeYear = widget.currentFilters['madeYear'] as int;
+    _recyclePaper = widget.currentFilters['recyclePaper'] as bool;
+    _singlePaper = widget.currentFilters['singlePaper'] as bool;
+    _seatWarmer = widget.currentFilters['seatWarmer'] as bool;
     super.initState();
   }
 
   Widget _buildDropdownButton(int madeYear, void Function(int?) update) {
     return ListTile(
-      title: Text(
+      title: const Text(
         '製造年',
       ),
-      subtitle: Text('設定年以降に作られた場所のみ表示'),
+      subtitle: const Text('設定年以降に作られた場所のみ表示'),
       trailing: DropdownButton(
         value: madeYear,
         icon: const Icon(Icons.arrow_downward),
@@ -76,25 +77,25 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('検索条件の設定'),
+        title: const Text('検索条件の設定'),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               final selectedFilters = {
-                'multipurpose': multipurpose,
-                'washlet': washlet,
-                'madeYear': madeYear,
-                'recyclePaper': recyclePaper,
-                'singlePaper': singlePaper,
-                'seatWarmer': seatWarmer,
-                'isfiltered': isfiltered,
+                'multipurpose': _multipurpose,
+                'washlet': _washlet,
+                'madeYear': _madeYear,
+                'recyclePaper': _recyclePaper,
+                'singlePaper': _singlePaper,
+                'seatWarmer': _seatWarmer,
+                'isfiltered': _isfiltered,
               };
               widget.saveFilters!(selectedFilters);
             },
             style: TextButton.styleFrom(
               primary: Colors.red,
             ),
-            child: Text(
+            child: const Text(
               '保存',
               style: TextStyle(
                 color: Colors.white,
@@ -105,66 +106,67 @@ class _FilterPageState extends State<FilterPage> {
       ),
       body: Column(children: <Widget>[
         Container(
-          child: Text('選択してください'),
+          padding: const EdgeInsets.all(10),
+          child: const Text('選択してください'),
         ),
         Expanded(
           child: ListView(
             children: <Widget>[
               SwitchListTile(
-                  title: Text('ウォシュレット'),
-                  subtitle: Text('ウォシュレットがある場所のみ表示'),
-                  value: washlet,
+                  title: const Text('ウォシュレット'),
+                  subtitle: const Text('ウォシュレットがある場所のみ表示'),
+                  value: _washlet,
                   onChanged: (newValue) {
                     setState(() {
-                      washlet = newValue;
-                      isfiltered = true;
+                      _washlet = newValue;
+                      _isfiltered = true;
                     });
                   }),
               SwitchListTile(
-                  secondary: Icon(multipurpose_toilet.wheelchair),
-                  title: Text('多目的トイレ'),
-                  subtitle: Text('多目的トイレがある場所のみ表示'),
-                  value: multipurpose,
+                  secondary: const Icon(MultipurposeToilet.wheelchair),
+                  title: const Text('多目的トイレ'),
+                  subtitle: const Text('多目的トイレがある場所のみ表示'),
+                  value: _multipurpose,
                   onChanged: (newValue) {
                     setState(() {
-                      multipurpose = newValue;
-                      isfiltered = true;
+                      _multipurpose = newValue;
+                      _isfiltered = true;
                     });
                   }),
               SwitchListTile(
-                  title: Text('再生紙'),
-                  subtitle: Text('再生紙がある場所のみ表示'),
-                  value: recyclePaper,
+                  title: const Text('再生紙'),
+                  subtitle: const Text('再生紙がある場所のみ表示'),
+                  value: _recyclePaper,
                   onChanged: (newValue) {
                     setState(() {
-                      recyclePaper = newValue;
-                      isfiltered = true;
+                      _recyclePaper = newValue;
+                      _isfiltered = true;
                     });
                   }),
               SwitchListTile(
-                  title: Text('singlePaper'),
-                  subtitle: Text('singlePaperがある場所のみ表示'),
-                  value: singlePaper,
+                  title: const Text('singlePaper'),
+                  subtitle: const Text('singlePaperがある場所のみ表示'),
+                  value: _singlePaper,
                   onChanged: (newValue) {
                     setState(() {
-                      singlePaper = newValue;
-                      isfiltered = true;
+                      _singlePaper = newValue;
+                      _isfiltered = true;
                     });
                   }),
               SwitchListTile(
-                  title: Text('温かい便座'),
-                  subtitle: Text('温かい便座がある場所のみ表示'),
-                  value: seatWarmer,
+                  title: const Text('温かい便座'),
+                  subtitle: const Text('温かい便座がある場所のみ表示'),
+                  value: _seatWarmer,
                   onChanged: (newValue) {
                     setState(() {
-                      seatWarmer = newValue;
-                      isfiltered = true;
+                      _seatWarmer = newValue;
+                      _isfiltered = true;
                     });
                   }),
-              _buildDropdownButton(madeYear, (int? newValue) {
+              _buildDropdownButton(_madeYear, (int? newValue) {
                 setState(() {
-                  madeYear = newValue!;
-                  isfiltered = true;
+                  _madeYear = newValue!;
+                  _isfiltered = true;
                 });
               }),
             ],

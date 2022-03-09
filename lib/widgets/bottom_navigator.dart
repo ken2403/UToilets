@@ -24,7 +24,8 @@ const pageIcon = <PageItem, IconData>{
 
 class BottomNavigation extends StatefulWidget {
   /*
-    TODO:説明
+    'lib/widgets/page_navigator.dart'と一緒に，ページ遷移をしてもbottomNavigationBarが残るようにするWidget．
+    BottomNavgationBarを生成するWidget．
   */
   // constructor
   const BottomNavigation(

@@ -4,21 +4,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import './map_page.dart';
 import './home_drawer.dart';
 import '../Icon/multipurpose_toilet.dart';
 
-enum RadioValueSex {
+enum ChosenSex {
   male,
   female,
   all,
 }
-const radioText = <RadioValueSex, String>{
-  RadioValueSex.male: '男性',
-  RadioValueSex.female: '女性',
+const radioText = <ChosenSex, String>{
+  ChosenSex.male: '男性',
+  ChosenSex.female: '女性',
 };
 
 class SearchPage extends StatefulWidget {
@@ -38,19 +37,20 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  // set constants
+  final String _pathToParamJson = 'assets/data/saved_params.json';
   // set some variables
-  RadioValueSex _chosenSex = RadioValueSex.male;
-  bool isVacant = false;
-  bool washlet = false;
-  bool multipurpose = false;
-  int madeYear = 1900;
-  bool notRecyclePaper = false;
-  bool doublePaper = false;
-  bool seatWarmer = false;
-  bool useSavedParams = false;
-  bool saveParams = false;
-  bool displaySaveButton = true;
-  final String pathToParamJson = 'assets/data/saved_params.json';
+  ChosenSex _chosenSex = ChosenSex.male;
+  bool _isVacant = false;
+  bool _washlet = false;
+  bool _multipurpose = false;
+  int _madeYear = 1900;
+  bool _notRecyclePaper = false;
+  bool _doublePaper = false;
+  bool _seatWarmer = false;
+  bool _useSavedParams = false;
+  bool _saveParams = false;
+  bool _displaySaveButton = true;
 
   // TODO:見た目を変更
   // widgets that set the date of manufacture
@@ -110,13 +110,13 @@ class _SearchPageState extends State<SearchPage> {
             sex: _chosenSex,
             barTitle: '検索結果',
             filters: {
-              'isVacant': isVacant,
-              'washlet': washlet,
-              'multipurpose': multipurpose,
-              'madeYear': madeYear,
-              'notRecyclePaper': notRecyclePaper,
-              'doublePaper': doublePaper,
-              'seatWarmer': seatWarmer,
+              'isVacant': _isVacant,
+              'washlet': _washlet,
+              'multipurpose': _multipurpose,
+              'madeYear': _madeYear,
+              'notRecyclePaper': _notRecyclePaper,
+              'doublePaper': _doublePaper,
+              'seatWarmer': _seatWarmer,
             },
           );
         },
@@ -125,32 +125,31 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _loadSavedParams() async {
-    String loadData = await rootBundle.loadString(pathToParamJson);
+    String loadData = await rootBundle.loadString(_pathToParamJson);
     final jsonResponse = json.decode(loadData);
     setState(() {
-      _chosenSex = jsonResponse['sex'] == 'male'
-          ? RadioValueSex.male
-          : RadioValueSex.female;
-      isVacant = jsonResponse['isVacant'];
-      washlet = jsonResponse['washlet'];
-      multipurpose = jsonResponse['multipurpose'];
-      madeYear = jsonResponse['madeYear'];
-      notRecyclePaper = jsonResponse['notRecyclePaper'];
-      doublePaper = jsonResponse['doublePaper'];
-      seatWarmer = jsonResponse['seatWarmer'];
+      _chosenSex =
+          jsonResponse['sex'] == 'male' ? ChosenSex.male : ChosenSex.female;
+      _isVacant = jsonResponse['isVacant'];
+      _washlet = jsonResponse['washlet'];
+      _multipurpose = jsonResponse['multipurpose'];
+      _madeYear = jsonResponse['madeYear'];
+      _notRecyclePaper = jsonResponse['notRecyclePaper'];
+      _doublePaper = jsonResponse['doublePaper'];
+      _seatWarmer = jsonResponse['seatWarmer'];
     });
   }
 
-  Future<void> _saveParams() async {
+  Future<void> _saveParamsTonJson() async {
     var saveData = {
-      "sex": _chosenSex == RadioValueSex.male ? "male" : "female",
-      "isVacant": isVacant,
-      "washlet": washlet,
-      "multipurpose": multipurpose,
-      "madeYear": madeYear,
-      "notRecyclePaper": notRecyclePaper,
-      "doublePaper": doublePaper,
-      "seatWarmer": seatWarmer,
+      "sex": _chosenSex == ChosenSex.male ? "male" : "female",
+      "isVacant": _isVacant,
+      "washlet": _washlet,
+      "multipurpose": _multipurpose,
+      "madeYear": _madeYear,
+      "notRecyclePaper": _notRecyclePaper,
+      "doublePaper": _doublePaper,
+      "seatWarmer": _seatWarmer,
     };
     var jsonText = jsonEncode(saveData);
     // TODO:json 保存
@@ -175,88 +174,88 @@ class _SearchPageState extends State<SearchPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Radio(
-                value: RadioValueSex.male,
+                value: ChosenSex.male,
                 groupValue: _chosenSex,
                 onChanged: (value) => _onRadioSelected(value),
               ),
               Container(
                 padding: const EdgeInsets.only(right: 15),
-                child: Text(radioText[RadioValueSex.male]!),
+                child: Text(radioText[ChosenSex.male]!),
               ),
               Radio(
-                value: RadioValueSex.female,
+                value: ChosenSex.female,
                 groupValue: _chosenSex,
                 onChanged: (value) => _onRadioSelected(value),
               ),
               Container(
                 padding: const EdgeInsets.only(right: 20),
-                child: Text(radioText[RadioValueSex.female]!),
+                child: Text(radioText[ChosenSex.female]!),
               )
             ],
           ),
           SwitchListTile(
             title: const Text('空きあり'),
             subtitle: const Text('個室の空きがあるトイレのみをマップ上に表示'),
-            value: isVacant,
+            value: _isVacant,
             onChanged: (newValue) {
               setState(() {
-                isVacant = newValue;
+                _isVacant = newValue;
               });
             },
           ),
           SwitchListTile(
             title: const Text('ウォシュレット'),
             subtitle: const Text('ウォシュレットがあるトイレのみをマップ上に表示'),
-            value: washlet,
+            value: _washlet,
             onChanged: (newValue) {
               setState(() {
-                washlet = newValue;
+                _washlet = newValue;
               });
             },
           ),
           SwitchListTile(
-            secondary: const Icon(multipurpose_toilet.wheelchair),
+            secondary: const Icon(MultipurposeToilet.wheelchair),
             title: const Text('多目的トイレ'),
             subtitle: const Text('多目的トイレがあるトイレのみをマップ上に表示'),
-            value: multipurpose,
+            value: _multipurpose,
             onChanged: (newValue) {
               setState(() {
-                multipurpose = newValue;
+                _multipurpose = newValue;
               });
             },
           ),
-          _buildDropdownButton(madeYear, (int? newValue) {
+          _buildDropdownButton(_madeYear, (int? newValue) {
             setState(() {
-              madeYear = newValue!;
+              _madeYear = newValue!;
             });
           }),
           SwitchListTile(
             title: const Text('再生紙'),
             subtitle: const Text('トイレットペーパーが再生紙ではないトイレのみをマップ上に表示'),
-            value: notRecyclePaper,
+            value: _notRecyclePaper,
             onChanged: (newValue) {
               setState(() {
-                notRecyclePaper = newValue;
+                _notRecyclePaper = newValue;
               });
             },
           ),
           SwitchListTile(
             title: const Text('ダブルのトイレットペーパー'),
             subtitle: const Text('トイレットペーパーがダブルのトイレのみをマップ上に表示'),
-            value: doublePaper,
+            value: _doublePaper,
             onChanged: (newValue) {
               setState(() {
-                doublePaper = newValue;
+                _doublePaper = newValue;
               });
             },
           ),
           SwitchListTile(
             title: const Text('温座'),
             subtitle: const Text('温座があるトイレのみをマップ上に表示'),
-            value: seatWarmer,
+            value: _seatWarmer,
             onChanged: (newValue) {
               setState(() {
-                seatWarmer = newValue;
+                _seatWarmer = newValue;
               });
             },
           ),
@@ -267,24 +266,24 @@ class _SearchPageState extends State<SearchPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Checkbox(
-                    value: useSavedParams,
+                    value: _useSavedParams,
                     onChanged: (newValue) {
                       setState(() {
-                        useSavedParams = newValue!;
-                        if (useSavedParams) {
+                        _useSavedParams = newValue!;
+                        if (_useSavedParams) {
                           _loadSavedParams();
-                          displaySaveButton = false;
-                          saveParams = false;
+                          _displaySaveButton = false;
+                          _saveParams = false;
                         } else {
-                          displaySaveButton = true;
-                          saveParams = false;
+                          _displaySaveButton = true;
+                          _saveParams = false;
                         }
                       });
                     },
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('保存した検索条件を使用する'),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: const Text('保存した検索条件を使用する'),
                   )
                 ],
               ),
@@ -292,21 +291,21 @@ class _SearchPageState extends State<SearchPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Checkbox(
-                    value: saveParams,
-                    onChanged: displaySaveButton
+                    value: _saveParams,
+                    onChanged: _displaySaveButton
                         ? (newValue) {
                             setState(() {
-                              saveParams = newValue!;
+                              _saveParams = newValue!;
                             });
                           }
                         : null,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       'この検索条件を保存する',
                       style: TextStyle(
-                          color: displaySaveButton
+                          color: _displaySaveButton
                               ? Colors.black87
                               : Colors.black38),
                     ),
@@ -323,7 +322,7 @@ class _SearchPageState extends State<SearchPage> {
           // when pressing the search button, change the page to filtered map.
           onPressed: () {
             _displayFilteredMap(context);
-            saveParams ? _saveParams() : null;
+            _saveParams ? _saveParamsTonJson() : null;
           }),
     );
   }

@@ -18,4 +18,4 @@ Set toilet condition and display restrooms that match the setting criteria on th
 
 You can even save your favorite restrooms.
 
-### Comfortable toilet life!
+**Comfortable toilet life!**

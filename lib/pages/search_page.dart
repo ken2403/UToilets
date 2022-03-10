@@ -119,6 +119,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  // load parameter
   Future<void> _loadSavedParams() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isVacant') == null) {
@@ -136,6 +137,7 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  // save parameter
   Future<void> _paramSaver() async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;

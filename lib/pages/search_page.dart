@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './map_page.dart';
-import './home_drawer.dart';
 import '../Icon/multipurpose_toilet.dart';
 
 enum ChosenSex {
@@ -155,7 +154,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: const HomeDrawer(),
       appBar: AppBar(
         title: Text(
           SearchPage.title,

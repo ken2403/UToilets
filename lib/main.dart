@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import './pages/homepage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const UToilet());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class UToilet extends StatefulWidget {
+  const UToilet({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<UToilet> createState() => _UToiletState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _UToiletState extends State<UToilet> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

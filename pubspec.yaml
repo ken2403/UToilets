@@ -43,18 +43,17 @@ dependencies:
   # draw polyline on map
   flutter_polyline_points: ^1.0.0
 
-  http: ^0.13.4
   # http client for Dart
   dio: ^4.0.4
 
   # device permission handler
   permission_handler: ^9.2.0
 
-  # get path on device
-  path_provider: ^2.0.9
-
   # platform-specific persistent storage for simple data
   shared_preferences: ^2.0.13
+
+  # introduction page
+  introduction_screen: ^3.0.0
 
 flutter_native_splash:
   color: "#ffffff"
@@ -87,7 +86,6 @@ flutter:
     - assets/images/splash.png
     - assets/data/toilet.json
     - assets/data/dummy_isvacant.json
-    - assets/data/saved_params.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

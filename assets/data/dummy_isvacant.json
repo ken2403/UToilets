@@ -1,26 +1,38 @@
 {
-    "10011":{
-        "maleBigYou":[
-            true, false
-        ],
+    "1000040101":{
         "femaleBigYou":[
-            false, false, false
+            false, false
         ]
     },
-    "20411":{
+    "1000040102":{
+        "multipurpose":[
+            true
+        ]
+    },
+    "1000040103":{
         "maleBigYou":[
             false, false
-        ],
-        "femaleBigYou":[
-            false, false, true
         ]
     },
-    "20421":{
+    "1000040201":{
         "maleBigYou":[
-            true, false
-        ],
+            false, true
+        ]
+    },
+    "1000040301":{
         "femaleBigYou":[
-            false, false, false
+            false, true
+        ],
+        "maleBigYou":[
+            false, true
+        ]
+    },
+    "2000040101":{
+        "femaleBigYou":[
+            false, true
+        ],
+        "maleBigYou":[
+            false, true
         ]
     }
 }

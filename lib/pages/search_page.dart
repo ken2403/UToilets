@@ -9,7 +9,6 @@ import '../Icon/multipurpose_toilet.dart';
 enum ChosenSex {
   male,
   female,
-  all,
 }
 const radioText = <ChosenSex, String>{
   ChosenSex.male: '男性',
@@ -23,7 +22,7 @@ class SearchPage extends StatefulWidget {
     検索後に条件を満たすトイレのみを表示したマップのページに遷移する．
   */
   // static values
-  static const String route = '/search';
+  static const String route = '/home/search';
   static const String title = '条件からトイレを探す';
   // constructor
   const SearchPage({Key? key}) : super(key: key);

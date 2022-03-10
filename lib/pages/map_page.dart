@@ -10,14 +10,19 @@ import '../model/directions_repository.dart';
 import '../model/directions_model.dart';
 import './search_page.dart';
 
+const chosenSexStr = <ChosenSex, String>{
+  ChosenSex.male: 'male',
+  ChosenSex.female: 'female',
+};
+
 class MapPage extends StatefulWidget {
   /*
     条件を満たすトイレの位置をマップ上に表示するページ．
     bottomNavigationBarのindex=0から遷移できるページでは，全てのトイレの位置をマップ上に表示．
-    'lib/pages/search_page.dart'から遷移するページでは，検索条件にマッチするトイレのみっマップ上に表示する．
+    'lib/pages/search_page.dart'から遷移するページでは，検索条件にマッチするトイレのみマップ上に表示する．
   */
-  // static variables
-  static const String route = '/map';
+  // static constants
+  static const String route = '/home/map';
   static const String title = '地図からトイレを探す';
   // constructor for filter
   const MapPage(
@@ -40,7 +45,6 @@ class MapPage extends StatefulWidget {
         },
         _any = true,
         super(key: key);
-  // TODO:sex
   final ChosenSex sex;
   final String barTitle;
   final Map<String, Object> filters;
@@ -104,8 +108,6 @@ class MapPageState extends State<MapPage> {
 
   // function to create a one marker from information of a double toilet
   void _addMarker(Map toiletDataElement, List vacantList, Set markersSet) {
-    String multipurpose =
-        toiletDataElement['metadata']['multipurpose'] ? 'あり' : 'なし';
     LatLng toiletPosition =
         LatLng(toiletDataElement['lat'], toiletDataElement['lng']);
     setState(
@@ -122,15 +124,7 @@ class MapPageState extends State<MapPage> {
             // tap anchor
             onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
             infoWindow: InfoWindow(
-              title: toiletDataElement['locationJa'] + '    ' + 'Tapしてここへ行く',
-              snippet: widget.sex == ChosenSex.all
-                  ? '女性洋式:${toiletDataElement['metadata']['femaleBigYou']} 男性洋式:${toiletDataElement['metadata']['maleBigYou']} 多目的トイレ:' +
-                      multipurpose
-                  : widget.sex == ChosenSex.male
-                      ? '男性洋式:${toiletDataElement['metadata']['maleBigYou']} 小便器:${toiletDataElement['metadata']['maleSmall']} 多目的トイレ:' +
-                          multipurpose
-                      : '女性洋式:${toiletDataElement['metadata']['femaleBigYou']} 多目的トイレ:' +
-                          multipurpose,
+              title: toiletDataElement['locationJa'],
               // tap info window
               onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
             ),
@@ -143,10 +137,10 @@ class MapPageState extends State<MapPage> {
   // function that called when the map anchor of info window is tapped
   Future<void> _tapAnchorOrInfoWindow(LatLng position) async {
     final GoogleMapController controller = await _controller.future;
-    position = LatLng(position.latitude - 0.0013, position.longitude);
+    position = LatLng(position.latitude - 0.0005, position.longitude);
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       target: position,
-      zoom: 17.5,
+      zoom: 19,
       tilt: 50.0,
     )));
     await showModalBottomSheet<int>(
@@ -167,19 +161,75 @@ class MapPageState extends State<MapPage> {
     // get vacant info
     String loadVacant = await rootBundle.loadString(_pathToVacantInfo);
     final jsonVacant = json.decode(loadVacant);
-    // filterのある変数(multipurposeなど)がtureになっていて，かつその変数がfalseのトイレのみスルーしてそうでないトイレは含めるというアルゴリズムに変更した．
+    // if _any, show all toilets
     if (widget._any) {
       for (var element in toiletData) {
-        // TODO:sex
-        List vacantList = jsonVacant[element['ID'].toString()]["maleBigYou"] +
-            jsonVacant[element['ID'].toString()]["femaleBigYou"];
-        _addMarker(element, vacantList, markers);
+        List vacantList = [];
+        // male
+        if (widget.sex == ChosenSex.male) {
+          if (element['sex'] == 'male' || element['sex'] == 'all') {
+            if (jsonVacant[element['ID'].toString()]
+                .containsKey('maleBigYou')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["maleBigYou"]);
+            } else if (jsonVacant[element['ID'].toString()]
+                .containsKey('multipurpose')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
+            }
+            _addMarker(element, vacantList, markers);
+          }
+        }
+        // female
+        else {
+          if (element['sex'] == 'female' || element['sex'] == 'all') {
+            if (jsonVacant[element['ID'].toString()]
+                .containsKey('femaleBigYou')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["femaleBigYou"]);
+            } else if (jsonVacant[element['ID'].toString()]
+                .containsKey('multipurpose')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
+            }
+            _addMarker(element, vacantList, markers);
+          }
+        }
       }
-    } else {
+    }
+    // if set filters, filter the restrooms to be displayed
+    else {
       for (var element in toiletData) {
-        List vacantList = widget.sex == ChosenSex.male
-            ? jsonVacant[element['ID'].toString()]["maleBigYou"]
-            : jsonVacant[element['ID'].toString()]["femaleBigYou"];
+        List vacantList = [];
+        // male
+        if (widget.sex == ChosenSex.male) {
+          if (element['sex'] == 'male' || element['sex'] == 'all') {
+            if (jsonVacant[element['ID'].toString()]
+                .containsKey('maleBigYou')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["maleBigYou"]);
+            } else if (jsonVacant[element['ID'].toString()]
+                .containsKey('multipurpose')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
+            }
+          }
+        }
+        // female
+        else {
+          if (element['sex'] == 'female' || element['sex'] == 'all') {
+            if (jsonVacant[element['ID'].toString()]
+                .containsKey('femaleBigYou')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["femaleBigYou"]);
+            } else if (jsonVacant[element['ID'].toString()]
+                .containsKey('multipurpose')) {
+              vacantList
+                  .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
+            }
+          }
+        }
+        // filter
         if (widget.filters['isVacant'] as bool &&
             !vacantList.any((val) => val)) {
           continue;

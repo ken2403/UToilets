@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import './map_page.dart';
+import './mypage/mypage_page.dart';
+import './search_page.dart';
 import './bottom_pages.dart';
 import '../widgets/bottom_navigator.dart';
 import '../widgets/page_navigator.dart';
@@ -58,15 +61,15 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           _buildPageItem(
             PageItem.search,
-            '/search',
+            SearchPage.route,
           ),
           _buildPageItem(
             PageItem.map,
-            '/map',
+            MapPage.route,
           ),
           _buildPageItem(
             PageItem.mypage,
-            '/mypage',
+            MyPage.route,
           ),
         ],
       ),

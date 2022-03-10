@@ -11,7 +11,7 @@ class MyPage extends StatefulWidget {
     個人の設定や保存した情報を確認できる．
   */
   // static values
-  static const String route = '/mypage';
+  static const String route = '/home/mypage';
   static const String title = 'マイページ';
   // constructor
   const MyPage({Key? key}) : super(key: key);

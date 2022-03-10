@@ -21,6 +21,6 @@ Map<String, Widget Function(BuildContext)> routeBuilder(BuildContext context) =>
     {
       SearchPage.route: (context) => const SearchPage(),
       MapPage.route: (context) =>
-          MapPage.any(sex: ChosenSex.all, barTitle: MapPage.title),
+          MapPage.any(sex: ChosenSex.male, barTitle: MapPage.title),
       MyPage.route: (context) => const MyPage(),
     };

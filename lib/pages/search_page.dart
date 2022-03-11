@@ -7,7 +7,6 @@ import '../.env.dart';
 import '../widgets/appbar.dart';
 import './map_page.dart';
 import './homepage.dart';
-import '../Icon/multipurpose_toilet.dart';
 
 class SearchPage extends StatefulWidget {
   /*
@@ -38,7 +37,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _saveParams = false;
   bool _displayOtherButton = true;
 
-  // TODO:見た目を変更
+  // TODO:4見た目を変更
   // widgets that set the date of manufacture
   // 変更された変数をmappageに遷移するときに引き渡す．
   Widget _buildDropdownButton(int madeYear, void Function(int?) update) {
@@ -67,11 +66,11 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  // TODO:switchlist,onChanged
   // function to build custom switch list
   Widget _customSwitch(
     BuildContext context,
     bool value,
+    void Function(bool) onChanged,
     String title,
     String subtitle,
   ) {
@@ -110,13 +109,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       value: value,
-      onChanged: _displayOtherButton
-          ? (newValue) {
-              setState(() {
-                value = newValue;
-              });
-            }
-          : (newValue) {},
+      onChanged: _displayOtherButton ? onChanged : (newValue) {},
     );
   }
 
@@ -202,24 +195,44 @@ class _SearchPageState extends State<SearchPage> {
             _customSwitch(
               context,
               _isVacant,
+              (bool val) {
+                setState(() {
+                  _isVacant = val;
+                });
+              },
               '空きあり',
               '個室の空きがあるトイレのみをマップ上に表示',
             ),
             _customSwitch(
               context,
               _washlet,
+              (bool val) {
+                setState(() {
+                  _washlet = val;
+                });
+              },
               'ウォシュレット',
               'ウォシュレットのあるトイレのみマップ上に表示',
             ),
             _customSwitch(
               context,
               _multipurpose,
+              (bool val) {
+                setState(() {
+                  _multipurpose = val;
+                });
+              },
               '多目的トイレ',
               '多目的トイレのみをマップ上に表示',
             ),
             _customSwitch(
               context,
-              _notRecyclePaper,
+              _seatWarmer,
+              (bool val) {
+                setState(() {
+                  _seatWarmer = val;
+                });
+              },
               '温座',
               '温座があるトイレのみをマップ上に表示',
             ),
@@ -230,7 +243,23 @@ class _SearchPageState extends State<SearchPage> {
             }),
             _customSwitch(
               context,
+              _doublePaper,
+              (bool val) {
+                setState(() {
+                  _doublePaper = val;
+                });
+              },
+              'ダブル',
+              'トイレットペーパーがダブルのトイレのみをマップ上に表示',
+            ),
+            _customSwitch(
+              context,
               _notRecyclePaper,
+              (bool val) {
+                setState(() {
+                  _notRecyclePaper = val;
+                });
+              },
               '再生紙',
               'トイレットペーパーが再生紙でないトイレのみをマップ上に表示',
             ),

@@ -3,17 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../.env.dart';
+import '../widgets/appbar.dart';
 import './map_page.dart';
+import './homepage.dart';
 import '../Icon/multipurpose_toilet.dart';
-
-enum ChosenSex {
-  male,
-  female,
-}
-const radioText = <ChosenSex, String>{
-  ChosenSex.male: '男性',
-  ChosenSex.female: '女性',
-};
 
 class SearchPage extends StatefulWidget {
   /*
@@ -33,7 +27,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   // set some variables
-  ChosenSex _chosenSex = ChosenSex.male;
   bool _isVacant = false;
   bool _washlet = false;
   bool _multipurpose = false;
@@ -87,15 +80,62 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  // function to change _chosenSex to selected sex
-  void _onRadioSelected(value) {
-    setState(() {
-      _chosenSex = value;
-    });
+  // TODO:switchlist
+  // function to build custom switch list
+  Widget _customSwitch(
+    BuildContext context,
+    bool value,
+    String title,
+    String subtitle,
+  ) {
+    return SwitchListTile(
+      activeColor: _displayOtherButton
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      activeTrackColor: _displayOtherButton
+          ? Theme.of(context).colorScheme.primary.withAlpha(100)
+          : Theme.of(context)
+              .colorScheme
+              .primary
+              .withAlpha(100)
+              .withOpacity(0.2),
+      inactiveThumbColor:
+          _displayOtherButton ? Colors.white : Colors.black87.withOpacity(0.2),
+      inactiveTrackColor: _displayOtherButton
+          ? Theme.of(context).unselectedWidgetColor.withOpacity(0.4)
+          : Theme.of(context).unselectedWidgetColor.withOpacity(0.2),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: _displayOtherButton
+              ? Theme.of(context).textTheme.bodyText1!.color
+              : Theme.of(context).textTheme.bodyText1!.color!.withAlpha(100),
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(
+          color: _displayOtherButton
+              ? Colors.black54
+              : Colors.black54.withAlpha(100),
+        ),
+      ),
+      value: value,
+      onChanged: _displayOtherButton
+          ? (newValue) {
+              setState(() {
+                value = newValue;
+              });
+            }
+          : (newValue) {},
+    );
   }
 
   // function to display filterd map when push the floatingActionButton
-  void _displayFilteredMap(BuildContext ctx) {
+  Future<void> _displayFilteredMap(BuildContext ctx) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    ChosenSex _chosenSex =
+        prefs.getInt('sex') == 0 ? ChosenSex.male : ChosenSex.female;
     Navigator.of(ctx).push(
       MaterialPageRoute(
         builder: (context) {
@@ -124,7 +164,6 @@ class _SearchPageState extends State<SearchPage> {
       _paramSaver();
     }
     setState(() {
-      _chosenSex = prefs.getInt('sex') == 0 ? ChosenSex.male : ChosenSex.female;
       _isVacant = prefs.getBool('isVacant')!;
       _washlet = prefs.getBool('washlet')!;
       _multipurpose = prefs.getBool('multipurpose')!;
@@ -139,7 +178,6 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> _paramSaver() async {
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
-    await prefs.setInt('sex', _chosenSex == ChosenSex.male ? 0 : 1);
     await prefs.setBool('isVacant', _isVacant);
     await prefs.setBool('washlet', _washlet);
     await prefs.setBool('multipurpose', _multipurpose);
@@ -149,336 +187,89 @@ class _SearchPageState extends State<SearchPage> {
     await prefs.setBool('seatWarmer', _seatWarmer);
   }
 
-  // TODO:switchlist
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          SearchPage.title,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
-      body: ListView(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Radio(
-                value: ChosenSex.male,
-                groupValue: _chosenSex,
-                onChanged: (value) => _onRadioSelected(value),
-              ),
-              Container(
-                padding: const EdgeInsets.only(right: 15),
-                child: Text(radioText[ChosenSex.male]!),
-              ),
-              Radio(
-                value: ChosenSex.female,
-                groupValue: _chosenSex,
-                onChanged: (value) => _onRadioSelected(value),
-              ),
-              Container(
-                padding: const EdgeInsets.only(right: 20),
-                child: Text(radioText[ChosenSex.female]!),
-              )
-            ],
-          ),
-          SwitchListTile(
-            activeColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            activeTrackColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary.withAlpha(100)
-                : Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(100)
-                    .withOpacity(0.2),
-            inactiveThumbColor: _displayOtherButton
-                ? Colors.white
-                : Colors.black87.withOpacity(0.2),
-            inactiveTrackColor: _displayOtherButton
-                ? Colors.black87.withAlpha(100)
-                : Colors.black87.withAlpha(100).withOpacity(0.2),
-            title: Text('空きあり',
-                style: TextStyle(
-                    color: _displayOtherButton
-                        ? Colors.black87
-                        : Colors.black87.withAlpha(100))),
-            subtitle: Text(
-              '個室の空きがあるトイレのみをマップ上に表示',
-              style: TextStyle(
-                color: _displayOtherButton
-                    ? Colors.black54
-                    : Colors.black54.withAlpha(100),
-              ),
-            ),
-            value: _isVacant,
-            onChanged: _displayOtherButton
-                ? (newValue) {
-                    setState(() {
-                      _isVacant = newValue;
-                    });
-                  }
-                : (newValue) {},
-          ),
-          SwitchListTile(
-            activeColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            activeTrackColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary.withAlpha(100)
-                : Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(100)
-                    .withOpacity(0.2),
-            inactiveThumbColor: _displayOtherButton
-                ? Colors.white
-                : Colors.black87.withOpacity(0.2),
-            inactiveTrackColor: _displayOtherButton
-                ? Colors.black87.withAlpha(100)
-                : Colors.black87.withAlpha(100).withOpacity(0.2),
-            title: Text('ウォシュレット',
-                style: TextStyle(
-                    color: _displayOtherButton
-                        ? Colors.black87
-                        : Colors.black87.withAlpha(100))),
-            subtitle: Text(
-              'ウォシュレットがあるトイレのみをマップ上に表示',
-              style: TextStyle(
-                color: _displayOtherButton
-                    ? Colors.black54
-                    : Colors.black54.withAlpha(100),
-              ),
-            ),
-            value: _washlet,
-            onChanged: _displayOtherButton
-                ? (newValue) {
-                    setState(() {
-                      _washlet = newValue;
-                    });
-                  }
-                : (newValue) {},
-          ),
-          SwitchListTile(
-            activeColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            activeTrackColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary.withAlpha(100)
-                : Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(100)
-                    .withOpacity(0.2),
-            inactiveThumbColor: _displayOtherButton
-                ? Colors.white
-                : Colors.black87.withOpacity(0.2),
-            inactiveTrackColor: _displayOtherButton
-                ? Colors.black87.withAlpha(100)
-                : Colors.black87.withAlpha(100).withOpacity(0.2),
-            title: Text('多目的トイレ',
-                style: TextStyle(
-                    color: _displayOtherButton
-                        ? Colors.black87
-                        : Colors.black87.withAlpha(100))),
-            subtitle: Text(
-              '多目的トイレがあるトイレのみをマップ上に表示',
-              style: TextStyle(
-                color: _displayOtherButton
-                    ? Colors.black54
-                    : Colors.black54.withAlpha(100),
-              ),
-            ),
-            value: _multipurpose,
-            onChanged: _displayOtherButton
-                ? (newValue) {
-                    setState(() {
-                      _multipurpose = newValue;
-                    });
-                  }
-                : (newValue) {},
-          ),
-          _buildDropdownButton(_madeYear, (int? newValue) {
-            setState(() {
-              _madeYear = newValue!;
-            });
-          }),
-          SwitchListTile(
-            activeColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            activeTrackColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary.withAlpha(100)
-                : Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(100)
-                    .withOpacity(0.2),
-            inactiveThumbColor: _displayOtherButton
-                ? Colors.white
-                : Colors.black87.withOpacity(0.2),
-            inactiveTrackColor: _displayOtherButton
-                ? Colors.black87.withAlpha(100)
-                : Colors.black87.withAlpha(100).withOpacity(0.2),
-            title: Text('再生紙',
-                style: TextStyle(
-                    color: _displayOtherButton
-                        ? Colors.black87
-                        : Colors.black87.withAlpha(100))),
-            subtitle: Text(
-              'トイレットペーパーが再生紙でないトイレのみをマップ上に表示',
-              style: TextStyle(
-                color: _displayOtherButton
-                    ? Colors.black54
-                    : Colors.black54.withAlpha(100),
-              ),
-            ),
-            value: _notRecyclePaper,
-            onChanged: _displayOtherButton
-                ? (newValue) {
-                    setState(() {
-                      _notRecyclePaper = newValue;
-                    });
-                  }
-                : (newValue) {},
-          ),
-          SwitchListTile(
-            activeColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            activeTrackColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary.withAlpha(100)
-                : Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(100)
-                    .withOpacity(0.2),
-            inactiveThumbColor: _displayOtherButton
-                ? Colors.white
-                : Colors.black87.withOpacity(0.2),
-            inactiveTrackColor: _displayOtherButton
-                ? Colors.black87.withAlpha(100)
-                : Colors.black87.withAlpha(100).withOpacity(0.2),
-            title: Text('ダブルのトイレットペーパー',
-                style: TextStyle(
-                    color: _displayOtherButton
-                        ? Colors.black87
-                        : Colors.black87.withAlpha(100))),
-            subtitle: Text(
-              'トイレットペーパーがダブルのトイレのみをマップ上に表示',
-              style: TextStyle(
-                color: _displayOtherButton
-                    ? Colors.black54
-                    : Colors.black54.withAlpha(100),
-              ),
-            ),
-            value: _doublePaper,
-            onChanged: _displayOtherButton
-                ? (newValue) {
-                    setState(() {
-                      _doublePaper = newValue;
-                    });
-                  }
-                : (newValue) {},
-          ),
-          SwitchListTile(
-            activeColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            activeTrackColor: _displayOtherButton
-                ? Theme.of(context).colorScheme.primary.withAlpha(100)
-                : Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(100)
-                    .withOpacity(0.2),
-            inactiveThumbColor: _displayOtherButton
-                ? Colors.white
-                : Colors.black87.withOpacity(0.2),
-            inactiveTrackColor: _displayOtherButton
-                ? Colors.black87.withAlpha(100)
-                : Colors.black87.withAlpha(100).withOpacity(0.2),
-            title: Text('温座',
-                style: TextStyle(
-                    color: _displayOtherButton
-                        ? Colors.black87
-                        : Colors.black87.withAlpha(100))),
-            subtitle: Text(
-              '温座があるトイレのみをマップ上に表示',
-              style: TextStyle(
-                color: _displayOtherButton
-                    ? Colors.black54
-                    : Colors.black54.withAlpha(100),
-              ),
-            ),
-            value: _seatWarmer,
-            onChanged: _displayOtherButton
-                ? (newValue) {
-                    setState(() {
-                      _seatWarmer = newValue;
-                    });
-                  }
-                : (newValue) {},
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Checkbox(
-                    value: _saveParams,
-                    onChanged: _displayOtherButton
-                        ? (newValue) {
-                            setState(() {
-                              _saveParams = newValue!;
-                            });
-                          }
-                        : null,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'この検索条件を保存する',
-                      style: TextStyle(
-                          color: _displayOtherButton
-                              ? Colors.black87
-                              : Colors.black38),
+      appBar: customAppbar(context, SearchPage.title),
+      body: Padding(
+        padding: pagePadding,
+        child: ListView(
+          children: <Widget>[
+            _customSwitch(context, _isVacant, '空きあり', '個室の空きがあるトイレのみをマップ上に表示'),
+            _customSwitch(
+                context, _washlet, 'ウォシュレット', 'ウォシュレットのあるトイレのみマップ上に表示'),
+            _customSwitch(context, _multipurpose, '多目的トイレ', '多目的トイレのみをマップ上に表示'),
+            _customSwitch(
+                context, _notRecyclePaper, '温座', '温座があるトイレのみをマップ上に表示'),
+            _buildDropdownButton(_madeYear, (int? newValue) {
+              setState(() {
+                _madeYear = newValue!;
+              });
+            }),
+            _customSwitch(context, _notRecyclePaper, '再生紙',
+                'トイレットペーパーが再生紙でないトイレのみをマップ上に表示'),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Checkbox(
+                      value: _saveParams,
+                      onChanged: _displayOtherButton
+                          ? (newValue) {
+                              setState(() {
+                                _saveParams = newValue!;
+                              });
+                            }
+                          : null,
                     ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Checkbox(
-                    value: _useSavedParams,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _useSavedParams = newValue!;
-                        if (_useSavedParams) {
-                          _loadSavedParams();
-                          _displayOtherButton = false;
-                          _saveParams = false;
-                        } else {
-                          _displayOtherButton = true;
-                          _saveParams = false;
-                        }
-                      });
-                    },
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: const Text('保存した検索条件を使用する'),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'この検索条件を保存する',
+                        style: TextStyle(
+                            color: _displayOtherButton
+                                ? Theme.of(context).textTheme.bodyText1!.color
+                                : Colors.black38),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Checkbox(
+                      value: _useSavedParams,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _useSavedParams = newValue!;
+                          if (_useSavedParams) {
+                            _loadSavedParams();
+                            _displayOtherButton = false;
+                            _saveParams = false;
+                          } else {
+                            _displayOtherButton = true;
+                            _saveParams = false;
+                          }
+                        });
+                      },
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        '保存した検索条件を使用する',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyText1!.color,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(

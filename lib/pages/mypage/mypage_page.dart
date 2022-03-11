@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/appbar.dart';
 import './condition_save_page.dart';
 import './toilet_save_page.dart';
 import './setting_page.dart';
@@ -22,7 +23,7 @@ class MyPage extends StatefulWidget {
 
 // TODO:UI
 class _MyPageState extends State<MyPage> {
-// function to go to the next page when press the button
+  // function to go to the next page when press the button
   void _goToNextPage(BuildContext ctx, Widget page) {
     Navigator.of(ctx).push(
       MaterialPageRoute(
@@ -33,111 +34,60 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(MyPage.title),
-      ),
-      body: GridView.extent(
-        maxCrossAxisExtent: 150,
-        padding: const EdgeInsets.all(50),
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
+  // function of elevated button
+  Widget _customElevatedButton(Widget page, IconData icon, String title) {
+    return ElevatedButton(
+      onPressed: () => _goToNextPage(context, page),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          ElevatedButton(
-            onPressed: () => _goToNextPage(context, const ConditionSavePage()),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Icon(
-                  Icons.search,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const Text(ConditionSavePage.title),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-              primary: Colors.white,
-              onPrimary: Theme.of(context).colorScheme.primary,
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
+          Icon(
+            icon,
+            size: 30,
+            color: Theme.of(context).unselectedWidgetColor,
           ),
-          ElevatedButton(
-            onPressed: () => _goToNextPage(context, const ToiletSavePage()),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Icon(
-                  Icons.wc,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const Text(ToiletSavePage.title),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-              primary: Colors.white,
-              onPrimary: Theme.of(context).colorScheme.primary,
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () => _goToNextPage(context, const SettingPage()),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Icon(
-                  Icons.settings,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const Text(SettingPage.title),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-              primary: Colors.white,
-              onPrimary: Theme.of(context).colorScheme.primary,
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () => _goToNextPage(context, const FeedBackPage()),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Icon(
-                  Icons.feedback,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const Text(FeedBackPage.title),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-              primary: Colors.white,
-              onPrimary: Theme.of(context).colorScheme.primary,
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+          Text(
+            title,
+            style: TextStyle(
+              color: Theme.of(context).unselectedWidgetColor,
+              fontSize: 14,
             ),
           ),
         ],
+      ),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(10),
+        primary: Colors.white,
+        onPrimary: Theme.of(context).colorScheme.primary,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: customAppbar(context, MyPage.title),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(30, 20, 30, 30),
+        child: GridView.extent(
+          maxCrossAxisExtent: 150,
+          mainAxisSpacing: 25,
+          crossAxisSpacing: 25,
+          children: <Widget>[
+            _customElevatedButton(const ConditionSavePage(), Icons.search,
+                ConditionSavePage.title),
+            _customElevatedButton(
+                const ToiletSavePage(), Icons.wc, ToiletSavePage.title),
+            _customElevatedButton(
+                const SettingPage(), Icons.settings, SettingPage.title),
+            _customElevatedButton(
+                const FeedBackPage(), Icons.feed, FeedBackPage.title),
+          ],
+        ),
       ),
     );
   }

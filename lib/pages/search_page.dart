@@ -273,7 +273,11 @@ class _SearchPageState extends State<SearchPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.search),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          child: Icon(
+            Icons.search,
+            color: Theme.of(context).textTheme.button!.color,
+          ),
           // when pressing the search button, change the page to filtered map.
           onPressed: () {
             _displayFilteredMap(context);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/appbar.dart';
+
 class ConditionSavePage extends StatefulWidget {
   /*
     TODO:説明
@@ -17,10 +19,7 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text(ConditionSavePage.title),
-      ),
+      appBar: customAppbar(context, ConditionSavePage.title),
       body: const Center(
         child: Text(ConditionSavePage.title),
       ),

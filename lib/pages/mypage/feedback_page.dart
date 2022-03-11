@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/appbar.dart';
+
 class FeedBackPage extends StatefulWidget {
   /*
     TODO:説明
@@ -17,10 +19,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text(FeedBackPage.title),
-      ),
+      appBar: customAppbar(context, FeedBackPage.title),
       body: const Center(
         child: Text(FeedBackPage.title),
       ),

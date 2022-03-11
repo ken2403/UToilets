@@ -67,16 +67,14 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  // TODO:switchlist
+  // TODO:switchlist,onChanged
   // function to build custom switch list
   Widget _customSwitch(
     BuildContext context,
     bool value,
-    Function(bool) onChanged,
     String title,
     String subtitle,
   ) {
-    void Function(bool) _onChanged = onChanged(value);
     return SwitchListTile(
       activeColor: _displayOtherButton
           ? Theme.of(context).colorScheme.primary
@@ -112,17 +110,14 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       value: value,
-      onChanged: _displayOtherButton ? _onChanged : (newValue) {},
+      onChanged: _displayOtherButton
+          ? (newValue) {
+              setState(() {
+                value = newValue;
+              });
+            }
+          : (newValue) {},
     );
-  }
-
-  // functon for custom switch list
-  void Function(bool) _customOnChanged(bool value) {
-    return (newValue) {
-      setState(() {
-        value = newValue;
-      });
-    };
   }
 
   // function to display filterd map when push the floatingActionButton
@@ -155,6 +150,21 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> _loadSavedParams() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isVacant') == null) {
+      _paramSaver();
+    }
+    if (prefs.getBool('washlet') == null) {
+      _paramSaver();
+    }
+    if (prefs.getBool('multipurpose') == null) {
+      _paramSaver();
+    }
+    if (prefs.getInt('madeYear') == null) {
+      _paramSaver();
+    }
+    if (prefs.getBool('doublePaper') == null) {
+      _paramSaver();
+    }
+    if (prefs.getBool('seatWarmer') == null) {
       _paramSaver();
     }
     setState(() {
@@ -192,28 +202,24 @@ class _SearchPageState extends State<SearchPage> {
             _customSwitch(
               context,
               _isVacant,
-              _customOnChanged,
               '空きあり',
               '個室の空きがあるトイレのみをマップ上に表示',
             ),
             _customSwitch(
               context,
               _washlet,
-              _customOnChanged,
               'ウォシュレット',
               'ウォシュレットのあるトイレのみマップ上に表示',
             ),
             _customSwitch(
               context,
               _multipurpose,
-              _customOnChanged,
               '多目的トイレ',
               '多目的トイレのみをマップ上に表示',
             ),
             _customSwitch(
               context,
               _notRecyclePaper,
-              _customOnChanged,
               '温座',
               '温座があるトイレのみをマップ上に表示',
             ),
@@ -225,7 +231,6 @@ class _SearchPageState extends State<SearchPage> {
             _customSwitch(
               context,
               _notRecyclePaper,
-              _customOnChanged,
               '再生紙',
               'トイレットペーパーが再生紙でないトイレのみをマップ上に表示',
             ),

@@ -6,9 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../widgets/appbar.dart';
 import '../model/directions_repository.dart';
 import '../model/directions_model.dart';
-import './search_page.dart';
+import './homepage.dart';
 
 const chosenSexStr = <ChosenSex, String>{
   ChosenSex.male: 'male',
@@ -82,7 +83,12 @@ class MapPageState extends State<MapPage> {
       // prompt users to allow location
       permission = await Geolocator.requestPermission();
       // if permission is not granted, _centerOfUT is set to _currentlocation
-      if (permission == LocationPermission.denied) return;
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return;
     }
 
     // if all is well, get the user's current location
@@ -415,13 +421,7 @@ class MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     getMarkers(_markers);
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: Text(
-          widget.barTitle,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
+      appBar: customAppbar(context, MapPage.title),
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -463,9 +463,9 @@ class MapPageState extends State<MapPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        icon: const Icon(
+        icon: Icon(
           Icons.directions_run,
-          color: Colors.white,
+          color: Theme.of(context).textTheme.button!.color,
         ),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),

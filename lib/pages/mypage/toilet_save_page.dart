@@ -4,7 +4,8 @@ import '../../widgets/appbar.dart';
 
 class ToiletSavePage extends StatefulWidget {
   /*
-    TODO:説明
+    保存したトイレの情報確認するページ．
+    TODO:6作る
   */
   // static values
   static const String title = '保存したトイレ';

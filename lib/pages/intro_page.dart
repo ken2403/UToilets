@@ -98,9 +98,11 @@ class _IntroPageState extends State<IntroPage> {
                     onChanged: (value) => widget.selectedSexRadio(value),
                   ),
                   Container(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Text(radioText[ChosenSex.male]!),
-                  ),
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Text(
+                        radioText[ChosenSex.male]!,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      )),
                   Radio(
                     value: ChosenSex.female,
                     groupValue: widget.chosenSex,
@@ -109,7 +111,10 @@ class _IntroPageState extends State<IntroPage> {
                   ),
                   Container(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Text(radioText[ChosenSex.female]!),
+                    child: Text(
+                      radioText[ChosenSex.female]!,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                   )
                 ],
               ),

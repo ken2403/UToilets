@@ -39,7 +39,7 @@ class MapPage extends StatefulWidget {
           'isVacant': false,
           'washlet': false,
           'multipurpose': false,
-          'madeYear': 1900,
+          'madeYear': 1990,
           'notRecyclePaper': false,
           'doublePaper': false,
           'seatWarmer': false,

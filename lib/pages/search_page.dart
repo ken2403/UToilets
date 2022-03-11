@@ -30,7 +30,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _isVacant = false;
   bool _washlet = false;
   bool _multipurpose = false;
-  int _madeYear = 1900;
+  int _madeYear = 1990;
   bool _notRecyclePaper = false;
   bool _doublePaper = false;
   bool _seatWarmer = false;
@@ -52,21 +52,8 @@ class _SearchPageState extends State<SearchPage> {
           icon: const Icon(Icons.arrow_downward),
           elevation: 16,
           onChanged: update,
-          items: <int>[
-            1900,
-            1910,
-            1920,
-            1930,
-            1940,
-            1950,
-            1960,
-            1970,
-            1980,
-            1990,
-            2000,
-            2010,
-            2020
-          ].map<DropdownMenuItem<int>>((int value) {
+          items: <int>[1990, 2000, 2010, 2020]
+              .map<DropdownMenuItem<int>>((int value) {
             return DropdownMenuItem<int>(
               value: value,
               child: Text(value.toString()),
@@ -85,9 +72,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget _customSwitch(
     BuildContext context,
     bool value,
+    Function(bool) onChanged,
     String title,
     String subtitle,
   ) {
+    void Function(bool) _onChanged = onChanged(value);
     return SwitchListTile(
       activeColor: _displayOtherButton
           ? Theme.of(context).colorScheme.primary
@@ -107,6 +96,7 @@ class _SearchPageState extends State<SearchPage> {
       title: Text(
         title,
         style: TextStyle(
+          fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
           color: _displayOtherButton
               ? Theme.of(context).textTheme.bodyText1!.color
               : Theme.of(context).textTheme.bodyText1!.color!.withAlpha(100),
@@ -115,20 +105,24 @@ class _SearchPageState extends State<SearchPage> {
       subtitle: Text(
         subtitle,
         style: TextStyle(
+          fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
           color: _displayOtherButton
-              ? Colors.black54
-              : Colors.black54.withAlpha(100),
+              ? Theme.of(context).textTheme.bodyText2!.color
+              : Theme.of(context).textTheme.bodyText2!.color!.withAlpha(100),
         ),
       ),
       value: value,
-      onChanged: _displayOtherButton
-          ? (newValue) {
-              setState(() {
-                value = newValue;
-              });
-            }
-          : (newValue) {},
+      onChanged: _displayOtherButton ? _onChanged : (newValue) {},
     );
+  }
+
+  // functon for custom switch list
+  void Function(bool) _customOnChanged(bool value) {
+    return (newValue) {
+      setState(() {
+        value = newValue;
+      });
+    };
   }
 
   // function to display filterd map when push the floatingActionButton
@@ -195,19 +189,46 @@ class _SearchPageState extends State<SearchPage> {
         padding: pagePadding,
         child: ListView(
           children: <Widget>[
-            _customSwitch(context, _isVacant, '空きあり', '個室の空きがあるトイレのみをマップ上に表示'),
             _customSwitch(
-                context, _washlet, 'ウォシュレット', 'ウォシュレットのあるトイレのみマップ上に表示'),
-            _customSwitch(context, _multipurpose, '多目的トイレ', '多目的トイレのみをマップ上に表示'),
+              context,
+              _isVacant,
+              _customOnChanged,
+              '空きあり',
+              '個室の空きがあるトイレのみをマップ上に表示',
+            ),
             _customSwitch(
-                context, _notRecyclePaper, '温座', '温座があるトイレのみをマップ上に表示'),
+              context,
+              _washlet,
+              _customOnChanged,
+              'ウォシュレット',
+              'ウォシュレットのあるトイレのみマップ上に表示',
+            ),
+            _customSwitch(
+              context,
+              _multipurpose,
+              _customOnChanged,
+              '多目的トイレ',
+              '多目的トイレのみをマップ上に表示',
+            ),
+            _customSwitch(
+              context,
+              _notRecyclePaper,
+              _customOnChanged,
+              '温座',
+              '温座があるトイレのみをマップ上に表示',
+            ),
             _buildDropdownButton(_madeYear, (int? newValue) {
               setState(() {
                 _madeYear = newValue!;
               });
             }),
-            _customSwitch(context, _notRecyclePaper, '再生紙',
-                'トイレットペーパーが再生紙でないトイレのみをマップ上に表示'),
+            _customSwitch(
+              context,
+              _notRecyclePaper,
+              _customOnChanged,
+              '再生紙',
+              'トイレットペーパーが再生紙でないトイレのみをマップ上に表示',
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

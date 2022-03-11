@@ -21,7 +21,6 @@ class MyPage extends StatefulWidget {
   State<MyPage> createState() => _MyPageState();
 }
 
-// TODO:UI
 class _MyPageState extends State<MyPage> {
   // function to go to the next page when press the button
   void _goToNextPage(BuildContext ctx, Widget page) {

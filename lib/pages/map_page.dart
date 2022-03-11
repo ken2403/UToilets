@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../widgets/appbar.dart';
 import '../model/directions_repository.dart';
@@ -97,21 +98,6 @@ class MapPageState extends State<MapPage> {
     );
   }
 
-  // function to initialize the state with current position
-  @override
-  void initState() {
-    super.initState();
-    // getting current location
-    _getLocation();
-  }
-  // TODO:dispose
-  // @override
-  // void dispose() {
-  //   final GoogleMapController controller = await _controller.future;
-  //   controller.dispose();
-  //   super.dispose();
-  // }
-
   // function to create a one marker from information of a double toilet
   void _addMarker(Map toiletDataElement, List vacantList, Set markersSet) {
     LatLng toiletPosition =
@@ -124,8 +110,8 @@ class MapPageState extends State<MapPage> {
             position: toiletPosition,
             icon: BitmapDescriptor.defaultMarkerWithHue(
               vacantList.any((val) => val)
-                  ? BitmapDescriptor.hueGreen
-                  : BitmapDescriptor.hueRed,
+                  ? BitmapDescriptor.hueAzure
+                  : BitmapDescriptor.hueGreen,
             ),
             // tap anchor
             onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
@@ -152,7 +138,7 @@ class MapPageState extends State<MapPage> {
     await showModalBottomSheet<int>(
       context: context,
       builder: (BuildContext context) {
-        // TODO:モーダルの中身
+        // TODO:2モーダルの中身
         return Container();
       },
     );
@@ -281,23 +267,26 @@ class MapPageState extends State<MapPage> {
         builder: (_) {
           return AlertDialog(
             title: const Text("現在地が取得できませんでした"),
-            content: const Text("位置情報の使用を許可しますか"),
+            content: const Text("位置情報の使用を設定してください"),
             actions: <Widget>[
               TextButton(
                 child: Text(
-                  "OK",
+                  "設定する",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: Theme.of(context).textTheme.button!.fontSize,
+                    fontWeight: Theme.of(context).textTheme.button!.fontWeight,
                   ),
                 ),
-                // TODO:okを押したらpermissonを表示
-                onPressed: () => {},
+                onPressed: () => openAppSettings(),
               ),
               TextButton(
                 child: Text(
-                  "Cancel",
+                  "閉じる",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: Theme.of(context).textTheme.button!.fontSize,
+                    fontWeight: Theme.of(context).textTheme.button!.fontWeight,
                   ),
                 ),
                 onPressed: () => Navigator.pop(context),
@@ -324,7 +313,10 @@ class MapPageState extends State<MapPage> {
                   child: Text(
                     "もう一度検索",
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: Theme.of(context).textTheme.button!.fontSize,
+                      fontWeight:
+                          Theme.of(context).textTheme.button!.fontWeight,
                     ),
                   ),
                   onPressed: () =>
@@ -332,9 +324,12 @@ class MapPageState extends State<MapPage> {
                 ),
                 TextButton(
                   child: Text(
-                    "Close",
+                    "閉じる",
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: Theme.of(context).textTheme.button!.fontSize,
+                      fontWeight:
+                          Theme.of(context).textTheme.button!.fontWeight,
                     ),
                   ),
                   onPressed: () => Navigator.pop(context),
@@ -373,9 +368,12 @@ class MapPageState extends State<MapPage> {
                 actions: [
                   TextButton(
                     child: Text(
-                      "Close",
+                      "閉じる",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: Theme.of(context).textTheme.button!.fontSize,
+                        fontWeight:
+                            Theme.of(context).textTheme.button!.fontWeight,
                       ),
                     ),
                     onPressed: () => Navigator.pop(context),
@@ -418,8 +416,22 @@ class MapPageState extends State<MapPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    // getting current location
+    _getLocation();
     getMarkers(_markers);
+  }
+  // TODO:3dispose
+  // @override
+  // void dispose() {
+  //   final GoogleMapController controller = await _controller.future;
+  //   controller.dispose();
+  //   super.dispose();
+  // }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar(context, widget.barTitle),
       body: Stack(
@@ -444,7 +456,7 @@ class MapPageState extends State<MapPage> {
                 if (_directionsInfo != null)
                   Polyline(
                     polylineId: const PolylineId('overview_polyline'),
-                    color: Colors.redAccent,
+                    color: Theme.of(context).colorScheme.primary,
                     width: 5,
                     points: _directionsInfo!.polylinePoints
                         .map((e) => LatLng(e.latitude, e.longitude))
@@ -456,12 +468,9 @@ class MapPageState extends State<MapPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _goNearest(_markers),
-        label: const Text(
+        label: Text(
           '今すぐ最寄りへ',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.button,
         ),
         icon: Icon(
           Icons.directions_run,

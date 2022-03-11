@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../.env.dart';
@@ -7,7 +8,7 @@ import '../../widgets/appbar.dart';
 
 class SettingPage extends StatefulWidget {
   /*
-    TODO:説明
+    初期設定を後から変更するページ．
   */
   // static values
   static const String title = '設定';
@@ -25,7 +26,7 @@ class _SettingPageState extends State<SettingPage> {
     ChosenSex.female: '女性',
   };
   // set some variables
-  ChosenSex _chosenSex = ChosenSex.male;
+  ChosenSex? _chosenSex;
 
   // function to change _chosenSex to selected sex
   void _onRadioSelected(value) {
@@ -50,8 +51,13 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     _loadSavedParams();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar(context, SettingPage.title),
       body: Padding(
@@ -68,7 +74,7 @@ class _SettingPageState extends State<SettingPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 3,
                       child: Text(
-                        '性別を変更する',
+                        '性別を変更',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),
@@ -110,17 +116,18 @@ class _SettingPageState extends State<SettingPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 3 * 2,
+                      width: MediaQuery.of(context).size.width / 5 * 3,
                       child: Text(
-                        '位置情報の設定を開く',
+                        '位置情報の設定を変更',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),
                     TextButton(
-                        // TODO:位置情報
-                        onPressed: () {},
+                        onPressed: () async {
+                          openAppSettings();
+                        },
                         child: Text(
-                          '開く',
+                          '設定を開く',
                           style: Theme.of(context).textTheme.bodyText1,
                         ))
                   ],

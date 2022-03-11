@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import './homepage.dart';
 
 class IntroPage extends StatefulWidget {
   /*
-    TODO:説明
+    初回起動時のみ表示されるページ．
+    初期設定(性別と位置情報の許可)と簡単なアプリの説明を行う．
   */
   // constructor
   const IntroPage({
@@ -117,8 +119,17 @@ class _IntroPageState extends State<IntroPage> {
                   width: double.infinity,
                   height: 60,
                   child: ElevatedButton(
-                    // TODO:permission
-                    onPressed: () {},
+                    onPressed: () async {
+                      var status =
+                          await Permission.accessMediaLocation.request();
+                      // 権限がない場合の処理.
+                      if (status.isDenied ||
+                          status.isRestricted ||
+                          status.isPermanentlyDenied) {
+                        // 端末の設定画面へ遷移.
+                        await openAppSettings();
+                      }
+                    },
                     child: Text(
                       "位置情報の利用を設定する",
                       style: Theme.of(context).textTheme.button,
@@ -132,7 +143,7 @@ class _IntroPageState extends State<IntroPage> {
         ),
         PageViewModel(
           title: "緊急性が高いとき",
-          body: "急いでいるときは画面中央下の\n地図ボタンを選択して最寄りのトイレへGO!",
+          body: "急いでいるときは画面中央下の地図ボタンを選択して最寄りのトイレへGO!",
           reverse: false,
           footer: _skipButton('今すぐアプリを使う'),
           decoration: pageDecoration.copyWith(),

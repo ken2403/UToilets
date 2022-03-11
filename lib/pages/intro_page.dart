@@ -127,11 +127,9 @@ class _IntroPageState extends State<IntroPage> {
                     onPressed: () async {
                       var status =
                           await Permission.accessMediaLocation.request();
-                      // 権限がない場合の処理.
                       if (status.isDenied ||
                           status.isRestricted ||
                           status.isPermanentlyDenied) {
-                        // 端末の設定画面へ遷移.
                         await openAppSettings();
                       }
                     },

@@ -201,6 +201,10 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
               '再生紙',
               'トイレットペーパーが再生紙でないトイレのみをマップ上に表示',
             ),
+            // for landscape mode
+            Container(
+              padding: const EdgeInsets.all(30),
+            ),
           ],
         ),
       ),

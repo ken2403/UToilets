@@ -421,7 +421,7 @@ class MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     getMarkers(_markers);
     return Scaffold(
-      appBar: customAppbar(context, MapPage.title),
+      appBar: customAppbar(context, widget.barTitle),
       body: Stack(
         alignment: Alignment.center,
         children: [

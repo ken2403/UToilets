@@ -115,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   //
-  Future<void> _loadSex() async {
+  Future<void> _setSex() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _chosenSex = prefs.getInt('sex') == 0 ? ChosenSex.male : ChosenSex.female;
@@ -177,11 +177,11 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     _loadSavedParams();
-    _loadSex();
   }
 
   @override
   Widget build(BuildContext context) {
+    _setSex();
     return Scaffold(
       appBar: customAppbar(context, SearchPage.title),
       body: Padding(

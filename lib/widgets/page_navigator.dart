@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/bottom_pages.dart';
+import '../pages/homepage.dart';
 
 class PageNavigator extends StatelessWidget {
   /*

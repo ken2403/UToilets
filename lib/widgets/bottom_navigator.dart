@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/bottom_pages.dart';
+import '../pages/homepage.dart';
 import '../pages/search_page.dart';
 import '../pages/map_page.dart';
 import '../pages/mypage/mypage_page.dart';

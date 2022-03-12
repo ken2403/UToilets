@@ -11,9 +11,10 @@ import '../../widgets/appbar.dart';
 class ToiletSavePage extends StatefulWidget {
   /*
     保存したトイレの情報確認するページ．
+    TODO:3UIと削除
   */
   // static values
-  static const String title = '保存したトイレ';
+  static const String title = 'お気に入りのトイレ';
   // constructor
   const ToiletSavePage({Key? key}) : super(key: key);
 
@@ -28,6 +29,7 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
   Map<int, dynamic> toiletMap = {};
   List<Map<String, dynamic>> toiletList = [];
 
+  // decode toiletMap to string list for shared preferences
   Map<int, dynamic> _decodeStrlistToMap(List<String> strList) {
     Map<String, dynamic> strMap = {};
     for (var str in strList) {
@@ -74,12 +76,13 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
     });
   }
 
-  // TODO:保存を反映
   @override
   void initState() {
-    _loadToilet(toiletMap);
-    _getToiletList(toiletMap, toiletList);
     super.initState();
+    Future(() async {
+      await _loadToilet(toiletMap);
+      _getToiletList(toiletMap, toiletList);
+    });
   }
 
   @override

@@ -1,0 +1,38 @@
+{
+    "1000040101":{
+        "femaleBigYou":[
+            false, false
+        ]
+    },
+    "1000040102":{
+        "multipurpose":[
+            true
+        ]
+    },
+    "1000040103":{
+        "maleBigYou":[
+            false, false
+        ]
+    },
+    "1000040201":{
+        "maleBigYou":[
+            false, true
+        ]
+    },
+    "1000040301":{
+        "femaleBigYou":[
+            false, true
+        ],
+        "maleBigYou":[
+            false, true
+        ]
+    },
+    "2000040101":{
+        "femaleBigYou":[
+            false, true
+        ],
+        "maleBigYou":[
+            false, true
+        ]
+    }
+}

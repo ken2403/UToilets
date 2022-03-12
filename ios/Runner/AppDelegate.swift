@@ -11,7 +11,7 @@ import GoogleMaps  // Add this import for Google map
     GeneratedPluginRegistrant.register(with: self)
 
     // Add Kento Nishio's Google Maps API key
-    GMSServices.provideAPIKey("AIzaSyCxfH-mghbFZVvsDb7gMafz2bxK8Thfwk4")
+    GMSServices.provideAPIKey("AIzaSyBX5G9F4fN-NxZ3SmKxEQXT9SWXpMhqOlU")
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

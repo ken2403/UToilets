@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/multipurpose_toilet.ttf
 ///
-/// 
+///
 /// * Font Awesome 4, Copyright (C) 2016 by Dave Gandy
 ///         Author:    Dave Gandy
 ///         License:   SIL ()
@@ -19,13 +19,13 @@
 ///
 import 'package:flutter/widgets.dart';
 
-
-// ダウンロードした画像をiconとして使うためのコード
-class multipurpose_toilet {
-  multipurpose_toilet._();
+// ダウンロードした画像をicon画像として使うためのコード
+class MultipurposeToilet {
+  MultipurposeToilet._();
 
   static const _kFontFam = 'multipurpose_toilet';
   static const String? _kFontPkg = null;
 
-  static const IconData wheelchair = IconData(0xf193, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData wheelchair =
+      IconData(0xf193, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

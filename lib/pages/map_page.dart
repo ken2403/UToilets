@@ -391,41 +391,42 @@ class MapPageState extends State<MapPage> {
             minMeters = distanceInMeters;
             minMarker = element;
           }
-          // show dialog if distance from university is too far
-          if (minMeters >= 5.0e3) {
-            showDialog(
-              context: context,
-              useRootNavigator: false,
-              barrierDismissible: true,
-              builder: (_) {
-                return AlertDialog(
-                  title: const Text("トイレが遠すぎます！"),
-                  content: const Text("本郷キャンパスの近くで試してください"),
-                  actions: [
-                    TextButton(
-                      child: Text(
-                        "閉じる",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize:
-                              Theme.of(context).textTheme.button!.fontSize,
-                          fontWeight:
-                              Theme.of(context).textTheme.button!.fontWeight,
-                        ),
+        }
+        // show dialog if distance from university is too far
+        if (minMeters >= 5.0e3) {
+          showDialog(
+            context: context,
+            useRootNavigator: false,
+            barrierDismissible: true,
+            builder: (_) {
+              return AlertDialog(
+                title: const Text("トイレが遠すぎます！"),
+                content: const Text("本郷キャンパスの近くで試してください"),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      "閉じる",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: Theme.of(context).textTheme.button!.fontSize,
+                        fontWeight:
+                            Theme.of(context).textTheme.button!.fontWeight,
                       ),
-                      onPressed: () => Navigator.pop(context),
                     ),
-                  ],
-                );
-              },
-            );
-          }
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+            },
+          );
         }
         // show routes if they are close enough to the university
-        await _getDirectionChangeCamera(
-          controller,
-          LatLng(minMarker.position.latitude, minMarker.position.longitude),
-        );
+        else {
+          await _getDirectionChangeCamera(
+            controller,
+            LatLng(minMarker.position.latitude, minMarker.position.longitude),
+          );
+        }
       }
     }
   }

@@ -30,25 +30,30 @@ class _UToiletState extends State<UToilet> {
           surface: Colors.white,
         ),
         canvasColor: const Color.fromRGBO(255, 254, 249, 1),
-        fontFamily: 'ARIAL',
+        fontFamily: 'Noto Sans JP',
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: const TextStyle(
+                fontFamily: 'Noto Sans JP',
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
               headline5: const TextStyle(
+                fontFamily: 'Noto Sans JP',
                 fontSize: 21,
                 fontWeight: FontWeight.bold,
               ),
               bodyText1: const TextStyle(
+                fontFamily: 'Noto Sans JP',
                 fontSize: 18,
                 color: Colors.black87,
               ),
               bodyText2: const TextStyle(
+                fontFamily: 'Noto Sans JP',
                 fontSize: 15,
                 color: Colors.black54,
               ),
               button: const TextStyle(
+                fontFamily: 'Noto Sans JP',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

@@ -40,29 +40,51 @@ class _SearchPageState extends State<SearchPage> {
   // TODO:4見た目を変更
   // widgets that set the date of manufacture
   // 変更された変数をmappageに遷移するときに引き渡す．
-  Widget _buildDropdownButton(int madeYear, void Function(int?) update) {
-    return Row(
-      children: [
-        const Text(
-          '製造年月日',
+  Widget _buildDropdownButton(
+      BuildContext context, int madeYear, void Function(int?) update) {
+    return ListTile(
+      title: Text(
+        '製造年',
+        style: TextStyle(
+          fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
+          fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
         ),
-        DropdownButton(
-          value: madeYear,
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          onChanged: update,
-          items: <int>[1990, 2000, 2010, 2020]
-              .map<DropdownMenuItem<int>>((int value) {
-            return DropdownMenuItem<int>(
-              value: value,
-              child: Text(value.toString()),
-            );
-          }).toList(),
+      ),
+      subtitle: Text(
+        '設定年以降に作られた場所のみ表示',
+        style: TextStyle(
+          fontFamily: Theme.of(context).textTheme.bodyText2!.fontFamily,
+          fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
         ),
-        const Text(
-          '年以降',
-        ),
-      ],
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: BorderSide(color: Colors.grey.shade300),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: DropdownButton(
+                value: madeYear,
+                icon: const Icon(Icons.unfold_more_sharp),
+                elevation: 16,
+                onChanged: update,
+                items: <int>[1970, 1980, 1990, 2000, 2010, 2020]
+                    .map<DropdownMenuItem<int>>((int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(value.toString()),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          const Text('年'),
+        ],
+      ),
     );
   }
 
@@ -93,6 +115,7 @@ class _SearchPageState extends State<SearchPage> {
       title: Text(
         title,
         style: TextStyle(
+          fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
           fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
           color: _displayOtherButton
               ? Theme.of(context).textTheme.bodyText1!.color
@@ -102,6 +125,7 @@ class _SearchPageState extends State<SearchPage> {
       subtitle: Text(
         subtitle,
         style: TextStyle(
+          fontFamily: Theme.of(context).textTheme.bodyText2!.fontFamily,
           fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
           color: _displayOtherButton
               ? Theme.of(context).textTheme.bodyText2!.color
@@ -236,11 +260,6 @@ class _SearchPageState extends State<SearchPage> {
               '温座',
               '温座があるトイレのみをマップ上に表示',
             ),
-            _buildDropdownButton(_madeYear, (int? newValue) {
-              setState(() {
-                _madeYear = newValue!;
-              });
-            }),
             _customSwitch(
               context,
               _doublePaper,
@@ -263,6 +282,11 @@ class _SearchPageState extends State<SearchPage> {
               '再生紙',
               'トイレットペーパーが再生紙でないトイレのみをマップ上に表示',
             ),
+            _buildDropdownButton(context, _madeYear, (int? newValue) {
+              setState(() {
+                _madeYear = newValue!;
+              });
+            }),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

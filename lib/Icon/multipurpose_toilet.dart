@@ -19,7 +19,7 @@
 ///
 import 'package:flutter/widgets.dart';
 
-// ダウンロードした画像をiconとして使うためのコード
+// ダウンロードした画像をicon画像として使うためのコード
 class MultipurposeToilet {
   MultipurposeToilet._();
 

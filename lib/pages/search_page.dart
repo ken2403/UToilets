@@ -48,13 +48,19 @@ class _SearchPageState extends State<SearchPage> {
         style: TextStyle(
           fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
           fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
+          color: _displayOtherButton
+              ? Theme.of(context).textTheme.bodyText1!.color
+              : Theme.of(context).textTheme.bodyText1!.color!.withAlpha(100),
         ),
       ),
       subtitle: Text(
-        '設定年以降に作られた場所のみ表示',
+        '設定年以降に作られたトイレのみをマップ上に表示',
         style: TextStyle(
           fontFamily: Theme.of(context).textTheme.bodyText2!.fontFamily,
           fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
+          color: _displayOtherButton
+              ? Theme.of(context).textTheme.bodyText2!.color
+              : Theme.of(context).textTheme.bodyText2!.color!.withAlpha(100),
         ),
       ),
       trailing: Row(
@@ -71,18 +77,40 @@ class _SearchPageState extends State<SearchPage> {
                 value: madeYear,
                 icon: const Icon(Icons.unfold_more_sharp),
                 elevation: 16,
-                onChanged: update,
+                onChanged: _displayOtherButton ? update : (newValue) {},
                 items: <int>[1970, 1980, 1990, 2000, 2010, 2020]
                     .map<DropdownMenuItem<int>>((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text(value.toString()),
+                    child: Text(
+                      value.toString(),
+                      style: TextStyle(
+                        color: _displayOtherButton
+                            ? Theme.of(context).textTheme.bodyText1!.color
+                            : Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .color!
+                                .withAlpha(100),
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
             ),
           ),
-          const Text('年'),
+          Text(
+            '年',
+            style: TextStyle(
+              color: _displayOtherButton
+                  ? Theme.of(context).textTheme.bodyText1!.color
+                  : Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .color!
+                      .withAlpha(100),
+            ),
+          ),
         ],
       ),
     );
@@ -236,7 +264,7 @@ class _SearchPageState extends State<SearchPage> {
                 });
               },
               'ウォシュレット',
-              'ウォシュレットのあるトイレのみマップ上に表示',
+              'ウォシュレットのあるトイレのみをマップ上に表示',
             ),
             _customSwitch(
               context,
@@ -269,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
                 });
               },
               'ダブル',
-              'トイレットペーパーがダブルのトイレのみをマップ上に表示',
+              'トイレットペーパーがダブルのトイレのみをマップに表示',
             ),
             _customSwitch(
               context,

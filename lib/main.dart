@@ -49,7 +49,7 @@ class _UToiletState extends State<UToilet> {
               ),
               bodyText2: const TextStyle(
                 fontFamily: 'Noto Sans JP',
-                fontSize: 15,
+                fontSize: 14,
                 color: Colors.black54,
               ),
               button: const TextStyle(

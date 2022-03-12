@@ -38,9 +38,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _displayOtherButton = true;
   ChosenSex _chosenSex = ChosenSex.male;
 
-  // TODO:4見た目を変更
   // widgets that set the date of manufacture
-  // 変更された変数をmappageに遷移するときに引き渡す．
   Widget _buildDropdownButton(
       BuildContext context, int madeYear, void Function(int?) update) {
     return ListTile(

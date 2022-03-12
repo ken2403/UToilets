@@ -137,7 +137,7 @@ class _MapBottomModalState extends State<MapBottomModal> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton(
-              // TODO:6onPressed
+              // TODO:2onPressed
               onPressed: () {},
               child: Text(
                 '建物内の\n案内を開始',

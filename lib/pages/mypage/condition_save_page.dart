@@ -7,7 +7,6 @@ import '../../widgets/appbar.dart';
 class ConditionSavePage extends StatefulWidget {
   /*
     保存した検索条件を確認•変更するページ．
-    TODO:5search画面とUIが被るので冗長
   */
   // static values
   static const String title = '保存した検索条件';
@@ -142,8 +141,8 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
 
   @override
   void initState() {
-    _loadSavedParams();
     super.initState();
+    _loadSavedParams();
   }
 
   @override

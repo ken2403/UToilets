@@ -141,14 +141,14 @@ class MapPageState extends State<MapPage> {
       tilt: 50.0,
     )));
     await showModalBottomSheet<int>(
-      context: context,
-      builder: (BuildContext context) {
-        return MapBottomModal(
-          toiletDataElement: toiletDataElement,
-          pressedGo: () {},
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return MapBottomModal(
+            toiletDataElement: toiletDataElement,
+            controller: controller,
+            pressedGo: _getDirectionChangeCamera,
+          );
+        });
   }
 
   // function to extract the toilets that match the setting conditions from .json
@@ -391,64 +391,72 @@ class MapPageState extends State<MapPage> {
             minMeters = distanceInMeters;
             minMarker = element;
           }
-        }
-        // show dialog if distance from university is too far
-        if (minMeters >= 5.0e3) {
-          showDialog(
-            context: context,
-            useRootNavigator: false,
-            barrierDismissible: true,
-            builder: (_) {
-              return AlertDialog(
-                title: const Text("トイレが遠すぎます！"),
-                content: const Text("本郷キャンパスの近くで試してください"),
-                actions: [
-                  TextButton(
-                    child: Text(
-                      "閉じる",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: Theme.of(context).textTheme.button!.fontSize,
-                        fontWeight:
-                            Theme.of(context).textTheme.button!.fontWeight,
+          // show dialog if distance from university is too far
+          if (minMeters >= 5.0e3) {
+            showDialog(
+              context: context,
+              useRootNavigator: false,
+              barrierDismissible: true,
+              builder: (_) {
+                return AlertDialog(
+                  title: const Text("トイレが遠すぎます！"),
+                  content: const Text("本郷キャンパスの近くで試してください"),
+                  actions: [
+                    TextButton(
+                      child: Text(
+                        "閉じる",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize:
+                              Theme.of(context).textTheme.button!.fontSize,
+                          fontWeight:
+                              Theme.of(context).textTheme.button!.fontWeight,
+                        ),
                       ),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-        // show routes if they are close enough to the university
-        else {
-          // switch the center of view point to the current location
-          controller.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  target: LatLng(
-                      _currentLocation!.latitude, _currentLocation!.longitude),
-                  zoom: 17,
-                  tilt: 50.0),
-            ),
-          );
-          // show directions to the nearest marker
-          final directions = await DirectionsRepository().getDirections(
-              origin: LatLng(
-                _currentLocation!.latitude,
-                _currentLocation!.longitude,
-              ),
-              destination: LatLng(
-                minMarker.position.latitude,
-                minMarker.position.longitude,
-              ));
-          if (directions != null) {
-            setState(() => _directionsInfo = directions);
-          } else {
-            _directionsInfo = null;
+                  ],
+                );
+              },
+            );
           }
         }
+        // show routes if they are close enough to the university
+        await _getDirectionChangeCamera(
+          controller,
+          LatLng(minMarker.position.latitude, minMarker.position.longitude),
+        );
       }
+    }
+  }
+
+  // function to get direction
+  Future<void> _getDirectionChangeCamera(
+    GoogleMapController controller,
+    LatLng _distination,
+  ) async {
+    // switch the center of view point to the current location
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target:
+                LatLng(_currentLocation!.latitude, _currentLocation!.longitude),
+            zoom: 17,
+            tilt: 50.0),
+      ),
+    );
+    // get direction
+    final directions = await DirectionsRepository().getDirections(
+      origin: LatLng(
+        _currentLocation!.latitude,
+        _currentLocation!.longitude,
+      ),
+      destination: _distination,
+    );
+    if (directions != null) {
+      setState(() => _directionsInfo = directions);
+    } else {
+      _directionsInfo = null;
     }
   }
 

@@ -79,27 +79,27 @@ class _MapBottomModalState extends State<MapBottomModal> {
           controller: PageController(initialPage: 1, viewportFraction: 0.3),
           children: [
             _buidInfoIconOne(
-              'washlet',
+              'ウォシュレット',
               Icons.wc,
               widget.toiletDataElement['metadata']['washlet'],
             ),
             _buidInfoIconOne(
-              'multipurpose',
+              '多目的',
               Icons.wc,
               widget.toiletDataElement['metadata']['multipurpose'],
             ),
             _buidInfoIconOne(
-              'seat warmer',
+              '温座',
               Icons.wc,
               widget.toiletDataElement['metadata']['seatWarmer'],
             ),
             _buidInfoIconOne(
-              'double',
+              'ダブルの紙',
               Icons.wc,
               widget.toiletDataElement['metadata']['doublePaper'],
             ),
             _buidInfoIconOne(
-              'not recycle',
+              '再生紙でない',
               Icons.wc,
               widget.toiletDataElement['metadata']['notRecyclePaper'],
             ),
@@ -140,7 +140,7 @@ class _MapBottomModalState extends State<MapBottomModal> {
               // TODO:6onPressed
               onPressed: () {},
               child: Text(
-                '建物の中の\n案内を開始',
+                '建物内の\n案内を開始',
                 style: TextStyle(
                   color: Theme.of(context).textTheme.button!.color,
                   fontSize: Theme.of(context).textTheme.button!.fontSize! - 3,

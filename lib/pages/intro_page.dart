@@ -145,15 +145,16 @@ class _IntroPageState extends State<IntroPage> {
           decoration: pageDecoration.copyWith(),
         ),
         PageViewModel(
-          title: "緊急性が高いとき",
-          body: "急いでいるときは画面中央下の地図ボタンを選択して最寄りのトイレへGO!",
+          title: "緊急性が高い場合",
+          body:
+              "急いでいる場合はアプリがトイレまでの最短経路を案内してくれる!\n\n地図画面下の「今すぐ最寄りへ」を押すと最寄りのトイレまでの最短経路をマップ上に表示!",
           reverse: false,
           footer: _skipButton('今すぐアプリを使う'),
           decoration: pageDecoration.copyWith(),
         ),
         PageViewModel(
           title: "お気に入りのトイレを探す",
-          body: "条件を設定してお気に入りのトイレを探そう！",
+          body: "お好みの条件を設定して見つけたトイレをお気に入り登録しよう!",
           reverse: false,
           footer: _skipButton('今すぐアプリを使う'),
           decoration: pageDecoration.copyWith(

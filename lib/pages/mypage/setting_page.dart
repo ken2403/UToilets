@@ -52,8 +52,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
-    _loadSavedParams();
     super.initState();
+    _loadSavedParams();
   }
 
   @override

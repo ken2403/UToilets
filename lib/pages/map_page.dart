@@ -428,13 +428,15 @@ class MapPageState extends State<MapPage> {
     _getLocation();
     getMarkers(_markers);
   }
-  // TODO:3dispose
-  // @override
-  // void dispose() {
-  //   final GoogleMapController controller = await _controller.future;
-  //   controller.dispose();
-  //   super.dispose();
-  // }
+
+  @override
+  void dispose() {
+    Future(() async {
+      final GoogleMapController controller = await _controller.future;
+      controller.dispose();
+    });
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

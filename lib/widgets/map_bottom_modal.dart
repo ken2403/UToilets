@@ -118,7 +118,6 @@ class _MapBottomModalState extends State<MapBottomModal> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton(
-              // TODO:onPressed
               onPressed: () {
                 widget.pressedGo(
                     widget.controller,

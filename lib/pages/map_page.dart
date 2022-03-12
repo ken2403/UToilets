@@ -145,6 +145,7 @@ class MapPageState extends State<MapPage> {
       builder: (BuildContext context) {
         return MapBottomModal(
           toiletDataElement: toiletDataElement,
+          pressedGo: () {},
         );
       },
     );
@@ -211,6 +212,36 @@ class MapPageState extends State<MapPage> {
               vacantList
                   .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
             }
+            // filter
+            if (widget.filters['isVacant'] as bool &&
+                !vacantList.any((val) => val)) {
+              continue;
+            }
+            if (widget.filters['washlet'] as bool &&
+                !element['metadata']['washlet']) {
+              continue;
+            }
+            if (widget.filters['multipurpose'] as bool &&
+                !element['metadata']['multipurpose']) {
+              continue;
+            }
+            if (widget.filters['madeYear'] as int >=
+                element['metadata']['madeYear']) {
+              continue;
+            }
+            if (widget.filters['notRecyclePaper'] as bool &&
+                !element['metadata']['notRecyclePaper']) {
+              continue;
+            }
+            if (widget.filters['doublePaper'] as bool &&
+                !element['metadata']['doublePaper']) {
+              continue;
+            }
+            if (widget.filters['seatWarmer'] as bool &&
+                !element['metadata']['seatWarmer']) {
+              continue;
+            }
+            _addMarker(element, vacantList, markers);
           }
         }
         // female
@@ -225,38 +256,38 @@ class MapPageState extends State<MapPage> {
               vacantList
                   .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
             }
+            // filter
+            if (widget.filters['isVacant'] as bool &&
+                !vacantList.any((val) => val)) {
+              continue;
+            }
+            if (widget.filters['washlet'] as bool &&
+                !element['metadata']['washlet']) {
+              continue;
+            }
+            if (widget.filters['multipurpose'] as bool &&
+                !element['metadata']['multipurpose']) {
+              continue;
+            }
+            if (widget.filters['madeYear'] as int >=
+                element['metadata']['madeYear']) {
+              continue;
+            }
+            if (widget.filters['notRecyclePaper'] as bool &&
+                !element['metadata']['notRecyclePaper']) {
+              continue;
+            }
+            if (widget.filters['doublePaper'] as bool &&
+                !element['metadata']['doublePaper']) {
+              continue;
+            }
+            if (widget.filters['seatWarmer'] as bool &&
+                !element['metadata']['seatWarmer']) {
+              continue;
+            }
+            _addMarker(element, vacantList, markers);
           }
         }
-        // filter
-        if (widget.filters['isVacant'] as bool &&
-            !vacantList.any((val) => val)) {
-          continue;
-        }
-        if (widget.filters['washlet'] as bool &&
-            !element['metadata']['washlet']) {
-          continue;
-        }
-        if (widget.filters['multipurpose'] as bool &&
-            !element['metadata']['multipurpose']) {
-          continue;
-        }
-        if (widget.filters['madeYear'] as int >=
-            element['metadata']['madeYear']) {
-          continue;
-        }
-        if (widget.filters['notRecyclePaper'] as bool &&
-            !element['metadata']['notRecyclePaper']) {
-          continue;
-        }
-        if (widget.filters['doublePaper'] as bool &&
-            !element['metadata']['doublePaper']) {
-          continue;
-        }
-        if (widget.filters['seatWarmer'] as bool &&
-            !element['metadata']['seatWarmer']) {
-          continue;
-        }
-        _addMarker(element, vacantList, markers);
       }
     }
   }

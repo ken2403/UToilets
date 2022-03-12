@@ -102,8 +102,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     _checkIntro();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     _setSex();
     // if finish intro, build main page homepage
     if (_endIntro) {

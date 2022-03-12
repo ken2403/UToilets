@@ -116,7 +116,7 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
   Future<void> _loadSavedParams() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isVacant') == null) {
-      _paramSaver();
+      await _paramSaver(prefs);
     }
     setState(() {
       _isVacant = prefs.getBool('isVacant')!;
@@ -130,9 +130,7 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
   }
 
   // save parameter
-  Future<void> _paramSaver() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
+  Future<void> _paramSaver(SharedPreferences prefs) async {
     await prefs.setBool('isVacant', _isVacant);
     await prefs.setBool('washlet', _washlet);
     await prefs.setBool('multipurpose', _multipurpose);
@@ -237,8 +235,9 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
           '保存する',
           style: Theme.of(context).textTheme.button,
         ),
-        onPressed: () {
-          _paramSaver();
+        onPressed: () async {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          _paramSaver(prefs);
           Navigator.of(context).popUntil((route) => route.isFirst);
         },
       ),

@@ -52,8 +52,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
-    _loadSavedParams();
     super.initState();
+    _loadSavedParams();
   }
 
   @override
@@ -116,9 +116,9 @@ class _SettingPageState extends State<SettingPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 5 * 3,
+                      width: MediaQuery.of(context).size.width / 2,
                       child: Text(
-                        '位置情報の設定を変更',
+                        '位置情報の設定変更',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),

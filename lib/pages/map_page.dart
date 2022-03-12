@@ -11,6 +11,7 @@ import '../widgets/appbar.dart';
 import '../model/directions_repository.dart';
 import '../model/directions_model.dart';
 import './homepage.dart';
+import '../widgets/map_bottom_modal.dart';
 
 const chosenSexStr = <ChosenSex, String>{
   ChosenSex.male: 'male',
@@ -99,14 +100,15 @@ class MapPageState extends State<MapPage> {
   }
 
   // function to create a one marker from information of a double toilet
-  void _addMarker(Map toiletDataElement, List vacantList, Set markersSet) {
-    LatLng toiletPosition =
-        LatLng(toiletDataElement['lat'], toiletDataElement['lng']);
+  void _addMarker(
+      Map<String, dynamic> toiletDataElement, List vacantList, Set markersSet) {
+    LatLng toiletPosition = LatLng(
+        toiletDataElement['lat'] as double, toiletDataElement['lng'] as double);
     setState(
       () {
         markersSet.add(
           Marker(
-            markerId: MarkerId(toiletDataElement['location']),
+            markerId: MarkerId(toiletDataElement['ID'].toString()),
             position: toiletPosition,
             icon: BitmapDescriptor.defaultMarkerWithHue(
               vacantList.any((val) => val)
@@ -114,11 +116,13 @@ class MapPageState extends State<MapPage> {
                   : BitmapDescriptor.hueGreen,
             ),
             // tap anchor
-            onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
+            onTap: () =>
+                _tapAnchorOrInfoWindow(toiletPosition, toiletDataElement),
             infoWindow: InfoWindow(
-              title: toiletDataElement['locationJa'],
+              title: toiletDataElement['locationJa'] as String,
               // tap info window
-              onTap: () => _tapAnchorOrInfoWindow(toiletPosition),
+              onTap: () =>
+                  _tapAnchorOrInfoWindow(toiletPosition, toiletDataElement),
             ),
           ),
         );
@@ -127,7 +131,8 @@ class MapPageState extends State<MapPage> {
   }
 
   // function that called when the map anchor of info window is tapped
-  Future<void> _tapAnchorOrInfoWindow(LatLng position) async {
+  Future<void> _tapAnchorOrInfoWindow(
+      LatLng position, Map<String, dynamic> toiletDataElement) async {
     final GoogleMapController controller = await _controller.future;
     position = LatLng(position.latitude - 0.0005, position.longitude);
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
@@ -136,12 +141,14 @@ class MapPageState extends State<MapPage> {
       tilt: 50.0,
     )));
     await showModalBottomSheet<int>(
-      context: context,
-      builder: (BuildContext context) {
-        // TODO:2モーダルの中身
-        return Container();
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return MapBottomModal(
+            toiletDataElement: toiletDataElement,
+            controller: controller,
+            pressedGo: _getDirectionChangeCamera,
+          );
+        });
   }
 
   // function to extract the toilets that match the setting conditions from .json
@@ -205,6 +212,36 @@ class MapPageState extends State<MapPage> {
               vacantList
                   .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
             }
+            // filter
+            if (widget.filters['isVacant'] as bool &&
+                !vacantList.any((val) => val)) {
+              continue;
+            }
+            if (widget.filters['washlet'] as bool &&
+                !element['metadata']['washlet']) {
+              continue;
+            }
+            if (widget.filters['multipurpose'] as bool &&
+                !element['metadata']['multipurpose']) {
+              continue;
+            }
+            if (widget.filters['madeYear'] as int >=
+                element['metadata']['madeYear']) {
+              continue;
+            }
+            if (widget.filters['notRecyclePaper'] as bool &&
+                !element['metadata']['notRecyclePaper']) {
+              continue;
+            }
+            if (widget.filters['doublePaper'] as bool &&
+                !element['metadata']['doublePaper']) {
+              continue;
+            }
+            if (widget.filters['seatWarmer'] as bool &&
+                !element['metadata']['seatWarmer']) {
+              continue;
+            }
+            _addMarker(element, vacantList, markers);
           }
         }
         // female
@@ -219,38 +256,38 @@ class MapPageState extends State<MapPage> {
               vacantList
                   .addAll(jsonVacant[element['ID'].toString()]["multipurpose"]);
             }
+            // filter
+            if (widget.filters['isVacant'] as bool &&
+                !vacantList.any((val) => val)) {
+              continue;
+            }
+            if (widget.filters['washlet'] as bool &&
+                !element['metadata']['washlet']) {
+              continue;
+            }
+            if (widget.filters['multipurpose'] as bool &&
+                !element['metadata']['multipurpose']) {
+              continue;
+            }
+            if (widget.filters['madeYear'] as int >=
+                element['metadata']['madeYear']) {
+              continue;
+            }
+            if (widget.filters['notRecyclePaper'] as bool &&
+                !element['metadata']['notRecyclePaper']) {
+              continue;
+            }
+            if (widget.filters['doublePaper'] as bool &&
+                !element['metadata']['doublePaper']) {
+              continue;
+            }
+            if (widget.filters['seatWarmer'] as bool &&
+                !element['metadata']['seatWarmer']) {
+              continue;
+            }
+            _addMarker(element, vacantList, markers);
           }
         }
-        // filter
-        if (widget.filters['isVacant'] as bool &&
-            !vacantList.any((val) => val)) {
-          continue;
-        }
-        if (widget.filters['washlet'] as bool &&
-            !element['metadata']['washlet']) {
-          continue;
-        }
-        if (widget.filters['multipurpose'] as bool &&
-            !element['metadata']['multipurpose']) {
-          continue;
-        }
-        if (widget.filters['madeYear'] as int >=
-            element['metadata']['madeYear']) {
-          continue;
-        }
-        if (widget.filters['notRecyclePaper'] as bool &&
-            !element['metadata']['notRecyclePaper']) {
-          continue;
-        }
-        if (widget.filters['doublePaper'] as bool &&
-            !element['metadata']['doublePaper']) {
-          continue;
-        }
-        if (widget.filters['seatWarmer'] as bool &&
-            !element['metadata']['seatWarmer']) {
-          continue;
-        }
-        _addMarker(element, vacantList, markers);
       }
     }
   }
@@ -385,33 +422,42 @@ class MapPageState extends State<MapPage> {
         }
         // show routes if they are close enough to the university
         else {
-          // switch the center of view point to the current location
-          controller.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  target: LatLng(
-                      _currentLocation!.latitude, _currentLocation!.longitude),
-                  zoom: 17,
-                  tilt: 50.0),
-            ),
+          await _getDirectionChangeCamera(
+            controller,
+            LatLng(minMarker.position.latitude, minMarker.position.longitude),
           );
-          // show directions to the nearest marker
-          final directions = await DirectionsRepository().getDirections(
-              origin: LatLng(
-                _currentLocation!.latitude,
-                _currentLocation!.longitude,
-              ),
-              destination: LatLng(
-                minMarker.position.latitude,
-                minMarker.position.longitude,
-              ));
-          if (directions != null) {
-            setState(() => _directionsInfo = directions);
-          } else {
-            _directionsInfo = null;
-          }
         }
       }
+    }
+  }
+
+  // function to get direction
+  Future<void> _getDirectionChangeCamera(
+    GoogleMapController controller,
+    LatLng _distination,
+  ) async {
+    // switch the center of view point to the current location
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target:
+                LatLng(_currentLocation!.latitude, _currentLocation!.longitude),
+            zoom: 17,
+            tilt: 50.0),
+      ),
+    );
+    // get direction
+    final directions = await DirectionsRepository().getDirections(
+      origin: LatLng(
+        _currentLocation!.latitude,
+        _currentLocation!.longitude,
+      ),
+      destination: _distination,
+    );
+    if (directions != null) {
+      setState(() => _directionsInfo = directions);
+    } else {
+      _directionsInfo = null;
     }
   }
 
@@ -422,13 +468,15 @@ class MapPageState extends State<MapPage> {
     _getLocation();
     getMarkers(_markers);
   }
-  // TODO:3dispose
-  // @override
-  // void dispose() {
-  //   final GoogleMapController controller = await _controller.future;
-  //   controller.dispose();
-  //   super.dispose();
-  // }
+
+  @override
+  void dispose() {
+    Future(() async {
+      final GoogleMapController controller = await _controller.future;
+      controller.dispose();
+    });
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

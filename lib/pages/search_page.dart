@@ -36,6 +36,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _useSavedParams = false;
   bool _saveParams = false;
   bool _displayOtherButton = true;
+  ChosenSex _chosenSex = ChosenSex.male;
 
   // TODO:4見た目を変更
   // widgets that set the date of manufacture
@@ -165,11 +166,16 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  //
+  Future<void> _setSex() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _chosenSex = prefs.getInt('sex') == 0 ? ChosenSex.male : ChosenSex.female;
+    });
+  }
+
   // function to display filterd map when push the floatingActionButton
   Future<void> _displayFilteredMap(BuildContext ctx) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    ChosenSex _chosenSex =
-        prefs.getInt('sex') == 0 ? ChosenSex.male : ChosenSex.female;
     Navigator.of(ctx).push(
       MaterialPageRoute(
         builder: (context) {
@@ -195,22 +201,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> _loadSavedParams() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isVacant') == null) {
-      _paramSaver();
-    }
-    if (prefs.getBool('washlet') == null) {
-      _paramSaver();
-    }
-    if (prefs.getBool('multipurpose') == null) {
-      _paramSaver();
-    }
-    if (prefs.getInt('madeYear') == null) {
-      _paramSaver();
-    }
-    if (prefs.getBool('doublePaper') == null) {
-      _paramSaver();
-    }
-    if (prefs.getBool('seatWarmer') == null) {
-      _paramSaver();
+      await _paramSaver(prefs);
     }
     setState(() {
       _isVacant = prefs.getBool('isVacant')!;
@@ -224,9 +215,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   // save parameter
-  Future<void> _paramSaver() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
+  Future<void> _paramSaver(SharedPreferences prefs) async {
     await prefs.setBool('isVacant', _isVacant);
     await prefs.setBool('washlet', _washlet);
     await prefs.setBool('multipurpose', _multipurpose);
@@ -237,7 +226,14 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _loadSavedParams();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _setSex();
     return Scaffold(
       appBar: customAppbar(context, SearchPage.title),
       body: Padding(
@@ -380,16 +376,20 @@ class _SearchPageState extends State<SearchPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          child: Icon(
-            Icons.search,
-            color: Theme.of(context).textTheme.button!.color,
-          ),
-          // when pressing the search button, change the page to filtered map.
-          onPressed: () {
-            _displayFilteredMap(context);
-            _saveParams ? _paramSaver() : null;
-          }),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        child: Icon(
+          Icons.search,
+          color: Theme.of(context).textTheme.button!.color,
+        ),
+        // when pressing the search button, change the page to filtered map.
+        onPressed: () async {
+          _displayFilteredMap(context);
+          if (_saveParams) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            _paramSaver(prefs);
+          }
+        },
+      ),
     );
   }
 }

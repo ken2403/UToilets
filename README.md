@@ -61,7 +61,7 @@ import GoogleMaps
 }
 ```
 
-### commmon setup
+### common setup
 
 Navigate to the file `lib/.env.dart` and replace the `YOUR KEY HERE`:
 

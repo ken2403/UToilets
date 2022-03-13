@@ -94,6 +94,7 @@ flutter:
     - assets/data/
     - assets/images/
     - assets/images/toilets/1000040101/
+    - assets/images/toilets/1000040102/
     - assets/images/toilets/1000040103/
     - assets/images/toilets/1000040201/
     - assets/images/toilets/1000040301/female/
@@ -114,7 +115,7 @@ flutter:
   # example:
 
   fonts:
-  ## Androidだと漢字が自動的に中国語フォントになっちゃってキモかったので変えた
+    ## Androidだと漢字が自動的に中国語フォントになっちゃってキモかったので変えた
     - family: Noto Sans JP
       fonts:
         - asset: assets/fonts/NotoSansJP-Regular.otf

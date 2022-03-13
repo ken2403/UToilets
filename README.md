@@ -2,20 +2,30 @@
 
 ![UToilet](./assets/images/splash.png)
 
-Application to find the nearest vacant toilets on the Hongo campus of the University of Tokyo.
+App that tells you where the nearest vacant toilet is on Hogo campus of the University of Tokyo.
 
-## Urgent state
+## Urgent situation
 
-If you are in a dire situation, This app will help you a lot. This app will guide you to the nearest restroom **immediately**.
+![app1](./doc/images/app1.png)
 
-Press the **Get nearest now** button and the app shows the route to the nearest vacant restroom on the map!
+![app2](./doc/images/app2.png)
 
-It is safe even after you get to the building. This app will also guide you to the shortest route from the building entrance to the restrooms.
+If you are in a dire situation, this app will help you a lot. This app will guide you to the nearest restroom **immediately**.
 
-## Find the favorite restrooms
+Press the **Get nearest now** button and the app shows the route to the nearest restroom on the map!
 
-Set toilet condition and display restrooms that match the setting criteria on the map.
+This app will help you even after you get to the building! This can also guide you to the shortest route from the building entrance to the restrooms.
 
-You can even save your favorite restrooms.
+## Find the favorite toilets
+
+![app3](./doc/images/app3.png)
+
+![app4](./doc/images/app4.png)
+
+![app5](./doc/images/app5.png)
+
+Set your preferences and only the restrooms that meet your criteria will be displayed on the map.
+
+You can also save your favorite restrooms. It is possible to go to your favorite restrooms whenever!.
 
 **Comfortable toilet life!**

@@ -7,7 +7,6 @@ App that tells you where the nearest vacant toilet is on Hogo campus of the Univ
 ## Urgent situation
 
 <img src="./doc/images/app1.png" width="200">
-&nbsp
 <img src="./doc/images/app2.png" width="200">
 
 If you are in a dire situation, this app will help you a lot. This app will guide you to the nearest restroom **immediately**.

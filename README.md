@@ -6,7 +6,7 @@ App that tells you where the nearest vacant toilet is on Hogo campus of the Univ
 
 ## Urgent situation
 
-![app1](./doc/images/app1.png)
+![app1](./doc/images/app1.png | width=100)
 
 ![app2](./doc/images/app2.png)
 

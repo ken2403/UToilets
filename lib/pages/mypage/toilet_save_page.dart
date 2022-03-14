@@ -90,16 +90,42 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
     return Scaffold(
         appBar: customAppbar(context, ToiletSavePage.title),
         body: toiletList.isNotEmpty
-            ? ListView.builder(
-                itemCount: toiletList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    elevation: 0,
-                    child: Text(
-                      toiletList[index]['locationJa'] as String,
-                    ),
-                  );
-                },
+            ? Padding(
+                padding: pagePadding,
+                child: ListView.builder(
+                  itemCount: toiletList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            toiletList[index]['locationJa'] as String,
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              '削除',
+                              style: TextStyle(
+                                fontFamily: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .fontFamily,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .fontSize,
+                                color: Colors.red.withOpacity(0.9),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               )
             : Center(
                 child: Padding(

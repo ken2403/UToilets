@@ -92,19 +92,11 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
           Theme.of(context).unselectedWidgetColor.withOpacity(0.4),
       title: Text(
         title,
-        style: TextStyle(
-          fontFamily: Theme.of(context).textTheme.bodyText1!.fontFamily,
-          fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
-          color: Theme.of(context).textTheme.bodyText1!.color,
-        ),
+        style: Theme.of(context).textTheme.bodyText1,
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          fontFamily: Theme.of(context).textTheme.bodyText2!.fontFamily,
-          fontSize: Theme.of(context).textTheme.bodyText2!.fontSize,
-          color: Theme.of(context).textTheme.bodyText2!.color,
-        ),
+        style: Theme.of(context).textTheme.bodyText2,
       ),
       value: value,
       onChanged: onChanged,

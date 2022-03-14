@@ -152,7 +152,7 @@ class _MapBottomModalState extends State<MapBottomModal> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton(
               onPressed: () {
-                _saveToilet(widget.toiletDataElement);
+                _saveToilets(widget.toiletDataElement);
                 _saveConfirm();
               },
               child: Text(
@@ -169,50 +169,28 @@ class _MapBottomModalState extends State<MapBottomModal> {
     );
   }
 
-  // decode String List that is return value of shared preferences, to Map object
-  Map<int, dynamic> _decodeStrlistToMap(List<String> strList) {
-    Map<String, dynamic> strMap = {};
-    for (var str in strList) {
-      strMap.addAll(json.decode(str));
-    }
-    Map<int, dynamic> toiletMap = {};
-    strMap.forEach((key, value) {
-      toiletMap.addAll({int.parse(key): value});
-    });
-    return toiletMap;
-  }
-
-  // load String List of shared preferences to toiletMap
-  Map<int, dynamic> _loadToilet(SharedPreferences prefs) {
+  // load String List of shared preferences(toiletIDs)
+  List<String> _loadToilets(SharedPreferences prefs) {
     if (prefs.getStringList('favToilets') == null) {
-      Map<int, dynamic> toiletMap = {};
-      return toiletMap;
+      List<String> emptyToileIDs = [];
+      return emptyToileIDs;
     } else {
-      var strList = prefs.getStringList('favToilets');
-      return _decodeStrlistToMap(strList!);
+      var toiletIDs = prefs.getStringList('favToilets');
+      return toiletIDs!;
     }
   }
 
   // function to save toilets. If already saved, do not save selected toilet
-  Future<void> _saveToilet(Map<String, dynamic> toiletDataElement) async {
+  Future<void> _saveToilets(Map<String, dynamic> toiletDataElement) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<int, dynamic> toiletMap = _loadToilet(prefs);
-    int index = 0;
-    bool flag = true;
-    toiletMap.forEach((key, value) {
-      if (value == toiletDataElement['ID'].toString()) {
-        flag = false;
+    List<String> savedToiletIDs = _loadToilets(prefs);
+    for (var id in savedToiletIDs) {
+      if (id == toiletDataElement['ID'].toString()) {
         return;
       }
-      index++;
-    });
-    if (flag) {
-      toiletMap.addAll({index: toiletDataElement['ID'].toString()});
-      List<String> strList = _encodeMapToStrlist(toiletMap);
-      prefs.setStringList('favToilets', strList);
-    } else {
-      return;
     }
+    savedToiletIDs.add(toiletDataElement['ID'].toString());
+    prefs.setStringList('favToilets', savedToiletIDs);
   }
 
   // show dialog if save button pressed
@@ -268,15 +246,6 @@ class _MapBottomModalState extends State<MapBottomModal> {
             _buildHorizontalView(context, horizontalIndex),
       ),
     );
-  }
-
-  // encode toiletMap to String List for shared preferences
-  List<String> _encodeMapToStrlist(Map<int, dynamic> toiletMap) {
-    List<String> strList = [];
-    toiletMap.forEach((key, value) {
-      strList.add(json.encode({key.toString(): value}));
-    });
-    return strList;
   }
 
   @override

@@ -11,7 +11,6 @@ import '../../widgets/appbar.dart';
 class ToiletSavePage extends StatefulWidget {
   /*
     保存したトイレの情報確認するページ．
-    TODO:1UIと削除
   */
   // static values
   static const String title = 'お気に入りのトイレ';
@@ -26,30 +25,24 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
   // set constants
   final String _pathToToiletJson = 'assets/data/toilet.json';
   // set some variables
-  Map<int, dynamic> toiletMap = {};
+  List<String> toiletIDs = [];
   List<Map<String, dynamic>> toiletList = [];
 
-  // decode toiletMap to string list for shared preferences
-  Map<int, dynamic> _decodeStrlistToMap(List<String> strList) {
-    Map<String, dynamic> strMap = {};
-    for (var str in strList) {
-      strMap.addAll(json.decode(str));
-    }
-    Map<int, dynamic> toiletMap = {};
-    strMap.forEach((key, value) {
-      toiletMap.addAll({int.parse(key): value});
-    });
-    return toiletMap;
-  }
-
-  Future<void> _loadToilet(Map<int, dynamic> _toiletMap) async {
+  // load String List of shared preferences (toiletIDs)
+  Future<void> _loadToilets(List<String> _toiletIDs) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getStringList('favToilets') != null) {
       var strList = prefs.getStringList('favToilets');
       setState(() {
-        _toiletMap.addAll(_decodeStrlistToMap(strList!));
+        _toiletIDs.addAll(strList!);
       });
     }
+  }
+
+  // function to save toilets. If already saved, do not save selected toilet
+  Future<void> _saveToilets(List<String> _toiletIDs) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('favToilets', _toiletIDs);
   }
 
   Future<Map<String, dynamic>?> _getToilets(int id) async {
@@ -64,14 +57,30 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
     }
   }
 
-  void _getToiletList(
-    Map<int, dynamic> _toiletMap,
+  // function to get toilet data from json and saved IDs
+  Future<void> _getToiletsList(
+    List<String> _toiletIDs,
     List<Map<String, dynamic>> _toiletList,
-  ) {
-    toiletMap.forEach((key, value) async {
-      var toiletElement = await _getToilets(int.parse(_toiletMap[key]));
+  ) async {
+    for (var id in _toiletIDs) {
+      int idInt = int.parse(id);
+      var toiletElement = await _getToilets(idInt);
       setState(() {
         _toiletList.add(toiletElement!);
+      });
+    }
+  }
+
+  void _removeToilet(
+    int index,
+    List<Map<String, dynamic>> _toiletList,
+    List<String> _toiletIDs,
+  ) {
+    setState(() {
+      _toiletIDs.remove(_toiletList[index]['ID'].toString());
+      _toiletList.removeAt(index);
+      Future(() async {
+        _saveToilets(toiletIDs);
       });
     });
   }
@@ -80,8 +89,8 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
   void initState() {
     super.initState();
     Future(() async {
-      await _loadToilet(toiletMap);
-      _getToiletList(toiletMap, toiletList);
+      await _loadToilets(toiletIDs);
+      _getToiletsList(toiletIDs, toiletList);
     });
   }
 
@@ -105,7 +114,9 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              _removeToilet(index, toiletList, toiletIDs);
+                            },
                             child: Text(
                               '削除',
                               style: TextStyle(

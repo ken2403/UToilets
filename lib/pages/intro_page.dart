@@ -9,6 +9,7 @@ class IntroPage extends StatefulWidget {
   /*
     初回起動時のみ表示されるページ．
     初期設定(性別と位置情報の許可)と簡単なアプリの説明を行う．
+    // TODO:3ページ遷移時のエラー
   */
   // constructor
   const IntroPage({

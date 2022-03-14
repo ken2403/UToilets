@@ -5,7 +5,7 @@ import '../../widgets/appbar.dart';
 class FeedBackPage extends StatefulWidget {
   /*
     アプリのfeed backを受け取るためのページ．
-    // TODO:3作る
+    // TODO:2作る
   */
   // static values
   static const String title = 'フィードバック';

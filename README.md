@@ -1,12 +1,15 @@
 # UToilet
 
+[![HackTheCampus](./image/huck_the_campus.png)](https://sites.google.com/g.ecc.u-tokyo.ac.jp/hack-the-campus/events/competition?authuser=0)
 ![UToilet](./assets/images/splash.png)
 
-App that tells you where the nearest vacant toilet is on Hogo campus of the University of Tokyo.
+App created for [HACK THE CAMPUS](https://sites.google.com/g.ecc.u-tokyo.ac.jp/hack-the-campus/events/competition?authuser=0) app competition.
+
+**UToilets** is useful application that tells you where the nearest vacant toilet is on Hogo campus of the University of Tokyo.
 
 ## Urgent situation
 
-![app1](./doc/images/app1.png)
+![app1](./image/app1.png)
 
 If you are in a dire situation, this app will help you a lot. This app will guide you to the nearest restroom **immediately**.
 
@@ -16,7 +19,7 @@ This app will help you even after you get to the building! This can also guide y
 
 ## Find the favorite toilets
 
-![app2](./doc/images/app2.png)
+![app2](./image/app2.png)
 
 Set your preferences and only the restrooms that meet your criteria will be displayed on the map.
 

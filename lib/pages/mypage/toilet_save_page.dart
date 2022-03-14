@@ -31,8 +31,8 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
   // load String List of shared preferences (toiletIDs)
   Future<void> _loadToilets(List<String> _toiletIDs) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getStringList('favToilets') != null) {
-      var strList = prefs.getStringList('favToilets');
+    if (prefs.getStringList(keyString[SavedKeys.favToilets]!) != null) {
+      var strList = prefs.getStringList(keyString[SavedKeys.favToilets]!);
       setState(() {
         _toiletIDs.addAll(strList!);
       });
@@ -42,7 +42,7 @@ class _ToiletSavePageState extends State<ToiletSavePage> {
   // function to save toilets. If already saved, do not save selected toilet
   Future<void> _saveToilets(List<String> _toiletIDs) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('favToilets', _toiletIDs);
+    prefs.setStringList(keyString[SavedKeys.favToilets]!, _toiletIDs);
   }
 
   Future<Map<String, dynamic>?> _getToilets(int id) async {

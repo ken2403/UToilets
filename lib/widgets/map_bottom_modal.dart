@@ -171,11 +171,11 @@ class _MapBottomModalState extends State<MapBottomModal> {
 
   // load String List of shared preferences(toiletIDs)
   List<String> _loadToilets(SharedPreferences prefs) {
-    if (prefs.getStringList('favToilets') == null) {
+    if (prefs.getStringList(keyString[SavedKeys.favToilets]!) == null) {
       List<String> emptyToileIDs = [];
       return emptyToileIDs;
     } else {
-      var toiletIDs = prefs.getStringList('favToilets');
+      var toiletIDs = prefs.getStringList(keyString[SavedKeys.favToilets]!);
       return toiletIDs!;
     }
   }
@@ -190,7 +190,7 @@ class _MapBottomModalState extends State<MapBottomModal> {
       }
     }
     savedToiletIDs.add(toiletDataElement['ID'].toString());
-    prefs.setStringList('favToilets', savedToiletIDs);
+    prefs.setStringList(keyString[SavedKeys.favToilets]!, savedToiletIDs);
   }
 
   // show dialog if save button pressed

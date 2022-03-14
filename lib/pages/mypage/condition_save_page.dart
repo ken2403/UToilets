@@ -106,29 +106,30 @@ class _ConditionSavePageState extends State<ConditionSavePage> {
   // load parameter
   Future<void> _loadSavedParams() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('isVacant') == null) {
+    if (prefs.getBool(keyString[SavedKeys.isVacant]!) == null) {
       await _paramSaver(prefs);
     }
     setState(() {
-      _isVacant = prefs.getBool('isVacant')!;
-      _washlet = prefs.getBool('washlet')!;
-      _multipurpose = prefs.getBool('multipurpose')!;
-      _madeYear = prefs.getInt('madeYear')!;
-      _notRecyclePaper = prefs.getBool('notRecyclePaper')!;
-      _doublePaper = prefs.getBool('doublePaper')!;
-      _seatWarmer = prefs.getBool('seatWarmer')!;
+      _isVacant = prefs.getBool(keyString[SavedKeys.isVacant]!)!;
+      _washlet = prefs.getBool(keyString[SavedKeys.washlet]!)!;
+      _multipurpose = prefs.getBool(keyString[SavedKeys.multipurpose]!)!;
+      _madeYear = prefs.getInt(keyString[SavedKeys.madeYear]!)!;
+      _notRecyclePaper = prefs.getBool(keyString[SavedKeys.notRecyclePaper]!)!;
+      _doublePaper = prefs.getBool(keyString[SavedKeys.doublePaper]!)!;
+      _seatWarmer = prefs.getBool(keyString[SavedKeys.seatWarmer]!)!;
     });
   }
 
   // save parameter
   Future<void> _paramSaver(SharedPreferences prefs) async {
-    await prefs.setBool('isVacant', _isVacant);
-    await prefs.setBool('washlet', _washlet);
-    await prefs.setBool('multipurpose', _multipurpose);
-    await prefs.setInt('madeYear', _madeYear);
-    await prefs.setBool('notRecyclePaper', _notRecyclePaper);
-    await prefs.setBool('doublePaper', _doublePaper);
-    await prefs.setBool('seatWarmer', _seatWarmer);
+    await prefs.setBool(keyString[SavedKeys.isVacant]!, _isVacant);
+    await prefs.setBool(keyString[SavedKeys.washlet]!, _washlet);
+    await prefs.setBool(keyString[SavedKeys.multipurpose]!, _multipurpose);
+    await prefs.setInt(keyString[SavedKeys.madeYear]!, _madeYear);
+    await prefs.setBool(
+        keyString[SavedKeys.notRecyclePaper]!, _notRecyclePaper);
+    await prefs.setBool(keyString[SavedKeys.doublePaper]!, _doublePaper);
+    await prefs.setBool(keyString[SavedKeys.seatWarmer]!, _seatWarmer);
   }
 
   @override

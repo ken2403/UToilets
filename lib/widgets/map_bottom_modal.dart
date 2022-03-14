@@ -198,15 +198,21 @@ class _MapBottomModalState extends State<MapBottomModal> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     Map<int, dynamic> toiletMap = _loadToilet(prefs);
     int index = 0;
+    bool flag = true;
     toiletMap.forEach((key, value) {
       if (value == toiletDataElement['ID'].toString()) {
+        flag = false;
         return;
       }
       index++;
     });
-    toiletMap.addAll({index: toiletDataElement['ID'].toString()});
-    List<String> strList = _encodeMapToStrlist(toiletMap);
-    prefs.setStringList('favToilets', strList);
+    if (flag) {
+      toiletMap.addAll({index: toiletDataElement['ID'].toString()});
+      List<String> strList = _encodeMapToStrlist(toiletMap);
+      prefs.setStringList('favToilets', strList);
+    } else {
+      return;
+    }
   }
 
   // show dialog if save button pressed

@@ -45,6 +45,7 @@ class _UToiletState extends State<UToilet> {
               bodyText1: const TextStyle(
                 fontFamily: 'Noto Sans JP',
                 fontSize: 18,
+                fontWeight: FontWeight.w400,
                 color: Colors.black87,
               ),
               bodyText2: const TextStyle(
